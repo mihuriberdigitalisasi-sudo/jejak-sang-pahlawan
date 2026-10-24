@@ -167,6 +167,54 @@ button:active { transform: translateY(1px); }
   #roomCodeInput, #joinRoomBtn { grid-column: auto; }
 }
 
+
+/* Mobile play mode: fullscreen landscape when supported */
+html { min-height: 100%; }
+body.playing-fullscreen { margin: 0; overflow: hidden; }
+#game:fullscreen {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  margin: 0;
+  border-radius: 0;
+  overflow: auto;
+  padding: clamp(8px, 1.5vw, 18px);
+  box-sizing: border-box;
+  background: #fff;
+}
+#game:fullscreen .hud { gap: 8px; }
+#game:fullscreen canvas {
+  max-width: 100%;
+  max-height: calc(100dvh - 150px);
+  object-fit: contain;
+}
+#game:fullscreen .game-area,
+#game:fullscreen .canvas-wrap { max-width: 100%; }
+#rotateHint {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #102d45;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px;
+  font: 700 1.15rem/1.5 system-ui, sans-serif;
+}
+#rotateHint .hint-inner { max-width: 320px; }
+#rotateHint .rotate-icon { display: block; font-size: 3rem; margin-bottom: 14px; }
+@media (orientation: portrait) and (max-width: 900px) {
+  body.playing-fullscreen #rotateHint { display: flex; }
+}
+@media (max-width: 760px) {
+  #game:fullscreen { padding: 8px; }
+  #game:fullscreen .hud h2 { font-size: 1.05rem; }
+  #game:fullscreen .muted { font-size: .78rem; }
+  #game:fullscreen button { padding: 7px 10px; font-size: .82rem; }
+}
+
 </style>
 </head>
 <body>
@@ -519,6 +567,55 @@ try {
   if (home) home.insertAdjacentHTML('afterbegin', '<div style="background:#fff0d4;color:#512b13;border:2px solid #d97706;border-radius:12px;padding:14px;margin-bottom:14px"><b>Game belum dapat dimulai.</b><br>Silakan tutup file dan buka kembali. Jika masalah tetap muncul, kirimkan detail berikut kepada pembuat game: <code>' + String(err && err.message || err).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) + '</code></div>');
   console.error('Gagal memulai Jejak Sang Pahlawan:', err);
 }
+</script>
+
+<div id="rotateHint" aria-live="polite">
+  <div class="hint-inner">
+    <span class="rotate-icon">📱 ↻</span>
+    Putar HP ke posisi LANDSCAPE (mendatar) untuk bermain lebih nyaman.
+    <p style="font-size:.9rem;font-weight:400">Jika layar tidak berputar otomatis, aktifkan Rotasi Otomatis pada pengaturan HP.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const startButton = document.getElementById('startBtn');
+  const gamePanel = document.getElementById('game');
+  if (!startButton || !gamePanel) return;
+  startButton.addEventListener('click', function(){
+    document.body.classList.add('playing-fullscreen');
+    const target = gamePanel;
+    try {
+      if (!document.fullscreenElement && target.requestFullscreen) {
+        const request = target.requestFullscreen();
+        if (request && typeof request.catch === 'function') request.catch(function(){});
+      }
+    } catch (e) {}
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        const lock = screen.orientation.lock('landscape');
+        if (lock && typeof lock.catch === 'function') lock.catch(function(){});
+      }
+    } catch (e) {}
+  });
+  document.addEventListener('fullscreenchange', function(){
+    if (!document.fullscreenElement) document.body.classList.remove('playing-fullscreen');
+  });
+  const mapButton = document.getElementById('mapBtn');
+  if (mapButton) mapButton.addEventListener('click', function(){
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function(){});
+    }
+    document.body.classList.remove('playing-fullscreen');
+  });
+  const homeButton = document.getElementById('homeBtn');
+  if (homeButton) homeButton.addEventListener('click', function(){
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function(){});
+    }
+    document.body.classList.remove('playing-fullscreen');
+  });
+})();
 </script>
 </body>
 </html>
