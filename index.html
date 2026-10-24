@@ -307,6 +307,17 @@ body.playing-fullscreen .footer { display:none !important; }
 }
 @media (orientation:landscape) { body.playing-fullscreen #rotateHint { display:none !important; } }
 
+
+/* SAFETY FIX: jangan sampai arena ikut tersembunyi saat panel Petunjuk dihilangkan */
+body.playing-fullscreen #game .game-layout,
+body.playing-fullscreen #game .gamebox,
+body.playing-fullscreen #game .canvas-wrap,
+body.playing-fullscreen #game #world,
+body.playing-fullscreen #game .controls { display:block !important; visibility:visible !important; opacity:1 !important; }
+body.playing-fullscreen #game .controls { display:flex !important; }
+body.playing-fullscreen #game .sidebox { display:none !important; }
+body.playing-fullscreen #game .canvas-wrap { width:100% !important; min-height:120px; background:#a9e8ff !important; }
+body.playing-fullscreen #game #world { width:100% !important; height:auto !important; max-width:100% !important; }
 </style>
 </head>
 <body>
@@ -533,7 +544,7 @@ function startLevel(i){
       if(lock&&typeof lock.catch==="function")lock.catch(function(){});
     }
   } catch(e) {}
-$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
+$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();requestAnimationFrame(()=>{draw();});setTimeout(()=>{draw();},120);beep(500,.12);}
 function renderProgress(){const done=state.answered[state.level].filter(Boolean).length;$("questionProgress").textContent=`📚 Tantangan ${done}/10`;$("progressBar").style.width=(done*10)+"%";updateStats();}
 function chestLocations(){return Array.from({length:10},(_,i)=>({x:130+i*132,y:340}));}
 function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}}
@@ -704,33 +715,30 @@ document.addEventListener("fullscreenchange", function(){
 </script>
 
 <script>
+/* Sembunyikan hanya panel petunjuk. Jangan mencari/menyembunyikan ancestor secara otomatis. */
 (function(){
   function setMobilePlayLayout(){
     if(!document.body.classList.contains("playing-fullscreen")) return;
-    const game = document.getElementById("game");
+    const game=document.getElementById("game");
     if(!game) return;
-    const headings = game.querySelectorAll("h1,h2,h3,h4,strong,b");
-    headings.forEach(function(el){
-      if((el.textContent || "").trim().includes("Petunjuk")){
-        let panel = el;
-        for(let i=0; i<5 && panel && panel.parentElement; i++){
-          if(panel.parentElement === game) break;
-          panel = panel.parentElement;
-          const r = panel.getBoundingClientRect();
-          if(r.width > 150 && r.height > 100){
-            panel.dataset.mobileHelpHidden = "1";
-            panel.style.setProperty("display","none","important");
-            break;
-          }
-        }
-      }
-    });
+    const help=game.querySelector(".sidebox");
+    if(help) help.style.setProperty("display","none","important");
+    const layout=game.querySelector(".game-layout");
+    const box=game.querySelector(".gamebox");
+    const wrap=game.querySelector(".canvas-wrap");
+    const canvas=game.querySelector("#world");
+    if(layout) layout.style.setProperty("display","block","important");
+    if(box) box.style.setProperty("display","block","important");
+    if(wrap) { wrap.style.setProperty("display","block","important"); wrap.style.setProperty("width","100%","important"); }
+    if(canvas) { canvas.style.setProperty("display","block","important"); canvas.style.setProperty("width","100%","important"); canvas.style.setProperty("height","auto","important"); }
+    if(typeof draw === "function") requestAnimationFrame(function(){draw();});
   }
-  document.addEventListener("fullscreenchange", setMobilePlayLayout);
-  document.addEventListener("webkitfullscreenchange", setMobilePlayLayout);
-  window.addEventListener("resize", setMobilePlayLayout);
-  const observer = new MutationObserver(setMobilePlayLayout);
-  observer.observe(document.body,{childList:true,subtree:true});
+  document.addEventListener("fullscreenchange",setMobilePlayLayout);
+  document.addEventListener("webkitfullscreenchange",setMobilePlayLayout);
+  window.addEventListener("resize",setMobilePlayLayout);
+  window.addEventListener("orientationchange",setMobilePlayLayout);
+  const observer=new MutationObserver(setMobilePlayLayout);
+  observer.observe(document.getElementById("game"),{attributes:true,attributeFilter:["class"]});
 })();
 </script>
 
