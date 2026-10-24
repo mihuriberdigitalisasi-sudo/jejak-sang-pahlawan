@@ -251,6 +251,62 @@ html:-webkit-full-screen body.playing-fullscreen #game .instructions {
   }
 }
 
+
+/* === PERBAIKAN FINAL: GAME MOBILE LANDSCAPE === */
+body.playing-fullscreen .footer { display:none !important; }
+@media (max-width:900px) {
+  html:fullscreen, html:-webkit-full-screen { width:100%; height:100%; overflow:hidden !important; background:#102b46; }
+  html:fullscreen body.playing-fullscreen, html:-webkit-full-screen body.playing-fullscreen {
+    width:100%; height:100%; min-height:0; margin:0; overflow:auto !important;
+    background:#eaf7f3; overscroll-behavior:contain;
+  }
+  html:fullscreen body.playing-fullscreen .wrap, html:-webkit-full-screen body.playing-fullscreen .wrap {
+    width:100%; max-width:none; min-height:100%; margin:0; padding:4px;
+  }
+  html:fullscreen body.playing-fullscreen #game, html:-webkit-full-screen body.playing-fullscreen #game {
+    display:block; width:100%; max-width:none; min-height:0; margin:0; padding:8px;
+    border:0; border-radius:0; box-shadow:none; background:#fff;
+  }
+  html:fullscreen body.playing-fullscreen #game .sidebox,
+  html:-webkit-full-screen body.playing-fullscreen #game .sidebox,
+  html:fullscreen body.playing-fullscreen #game .help-panel,
+  html:-webkit-full-screen body.playing-fullscreen #game .help-panel,
+  html:fullscreen body.playing-fullscreen #game #helpPanel,
+  html:-webkit-full-screen body.playing-fullscreen #game #helpPanel { display:none !important; }
+  html:fullscreen body.playing-fullscreen #game .game-layout,
+  html:-webkit-full-screen body.playing-fullscreen #game .game-layout { display:block !important; width:100%; margin:0; }
+  html:fullscreen body.playing-fullscreen #game .gamebox,
+  html:-webkit-full-screen body.playing-fullscreen #game .gamebox { display:block; width:100%; min-width:0; margin:0; }
+  html:fullscreen body.playing-fullscreen #game .canvas-wrap,
+  html:-webkit-full-screen body.playing-fullscreen #game .canvas-wrap {
+    width:100%; margin:0; border:2px solid #fff; border-radius:8px; overflow:hidden;
+    background:#a9e8ff; box-shadow:none; touch-action:none;
+  }
+  html:fullscreen body.playing-fullscreen #game canvas,
+  html:-webkit-full-screen body.playing-fullscreen #game canvas {
+    display:block; width:100% !important; height:auto !important; max-width:100% !important;
+    max-height:58dvh !important; object-fit:contain; touch-action:none;
+  }
+  html:fullscreen body.playing-fullscreen #game .hud,
+  html:-webkit-full-screen body.playing-fullscreen #game .hud { gap:5px; margin-bottom:5px; }
+  html:fullscreen body.playing-fullscreen #game .hud h2,
+  html:-webkit-full-screen body.playing-fullscreen #game .hud h2 { margin:0; font-size:clamp(.8rem,2.4vw,1.1rem); }
+  html:fullscreen body.playing-fullscreen #game .hud .muted,
+  html:-webkit-full-screen body.playing-fullscreen #game .hud .muted { font-size:.72rem; }
+  html:fullscreen body.playing-fullscreen #game .controls,
+  html:-webkit-full-screen body.playing-fullscreen #game .controls {
+    display:flex; position:relative; z-index:5; gap:7px; margin:7px 0 0;
+    padding-bottom:env(safe-area-inset-bottom,0); flex-wrap:nowrap;
+  }
+  html:fullscreen body.playing-fullscreen #game .controls button,
+  html:-webkit-full-screen body.playing-fullscreen #game .controls button {
+    flex:1 1 0; min-width:0; min-height:44px; padding:8px 5px;
+    font-size:clamp(.72rem,2.2vw,.95rem); touch-action:manipulation;
+    user-select:none; -webkit-user-select:none;
+  }
+}
+@media (orientation:landscape) { body.playing-fullscreen #rotateHint { display:none !important; } }
+
 </style>
 </head>
 <body>
@@ -458,22 +514,26 @@ function notify(msg){const t=$("toast");t.textContent=msg;t.classList.remove("hi
 function beep(freq=660,dur=.12,type="sine"){if(!state.sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);}catch(e){}}
 function renderMap(){const box=$("levelCards");box.innerHTML="";levels.forEach((l,i)=>{const unlocked=i===0||state.completed[i-1],done=state.completed[i];const d=document.createElement("div");d.className="levelcard"+(!unlocked?" locked":"")+(done?" done":"");d.innerHTML=`<div class="emoji">${l.emoji}</div><h3>Level ${i+1}: ${l.title}</h3><p>${l.desc}</p><div><b>${done?"✅ Selesai":unlocked?"🔓 Terbuka":"🔒 Terkunci"}</b></div><button ${unlocked?"":"disabled"}>${done?"Mainkan Lagi":"Mulai Level"}</button>`;d.querySelector("button").addEventListener("click",()=>startLevel(i));box.appendChild(d);});updateStats();}
 function startLevel(i){
- if(i>0&&!state.completed[i-1])return;
- /* Masuk layar penuh hanya saat pemain menekan tombol Mulai Level. */
- document.body.classList.add("playing-fullscreen");
- try {
-   if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-     const fs = document.documentElement.requestFullscreen();
-     if (fs && typeof fs.catch === "function") fs.catch(function(){});
-   }
- } catch(e) {}
- try {
-   if (screen.orientation && screen.orientation.lock) {
-     const lock = screen.orientation.lock("landscape");
-     if (lock && typeof lock.catch === "function") lock.catch(function(){});
-   }
- } catch(e) {}
- state.level=i;player={x:60,y:320,w:34,h:45,vx:0,vy:0,onGround:false};camera=0;gameActive=true;showOnly("game");$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
+  if(i>0&&!state.completed[i-1])return;
+  /* Tampilkan game lebih dahulu agar browser mengukur canvas dengan benar. */
+  state.level=i;
+  player={x:60,y:groundY-45,w:34,h:45,vx:0,vy:0,onGround:false};
+  camera=0;gameActive=true;showOnly("game");
+  document.body.classList.add("playing-fullscreen");
+  /* Fullscreen/orientasi dicoba dari klik pengguna; game tetap berjalan jika ditolak. */
+  try {
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      const fs=document.documentElement.requestFullscreen();
+      if(fs&&typeof fs.catch==="function")fs.catch(function(){});
+    }
+  } catch(e) {}
+  try {
+    if(screen.orientation&&screen.orientation.lock) {
+      const lock=screen.orientation.lock("landscape");
+      if(lock&&typeof lock.catch==="function")lock.catch(function(){});
+    }
+  } catch(e) {}
+$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
 function renderProgress(){const done=state.answered[state.level].filter(Boolean).length;$("questionProgress").textContent=`📚 Tantangan ${done}/10`;$("progressBar").style.width=(done*10)+"%";updateStats();}
 function chestLocations(){return Array.from({length:10},(_,i)=>({x:130+i*132,y:340}));}
 function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}}
@@ -671,6 +731,21 @@ document.addEventListener("fullscreenchange", function(){
   window.addEventListener("resize", setMobilePlayLayout);
   const observer = new MutationObserver(setMobilePlayLayout);
   observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<script>
+(function(){
+  function refreshGameViewport(){
+    const game=document.getElementById("game");
+    if(!game||game.classList.contains("hidden"))return;
+    if(typeof draw==="function")requestAnimationFrame(function(){draw();});
+  }
+  window.addEventListener("resize",refreshGameViewport,{passive:true});
+  window.addEventListener("orientationchange",refreshGameViewport,{passive:true});
+  document.addEventListener("fullscreenchange",refreshGameViewport);
+  document.addEventListener("webkitfullscreenchange",refreshGameViewport);
 })();
 </script>
 
