@@ -188,6 +188,69 @@ html:fullscreen #game canvas { max-width:100%; max-height:56vh; object-fit:conta
  html:fullscreen #game button { padding:7px 10px; font-size:.82rem; }
 }
 
+
+/* Mobile fullscreen layout: game uses the full viewport, help panel hidden */
+html, body { min-height: 100%; }
+html:fullscreen, html:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #eaf7f3;
+}
+html:fullscreen body, html:-webkit-full-screen body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: auto;
+}
+html:fullscreen body.playing-fullscreen .wrap,
+html:-webkit-full-screen body.playing-fullscreen .wrap {
+  width: 100vw;
+  max-width: none;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 4px;
+  box-sizing: border-box;
+}
+html:fullscreen body.playing-fullscreen #game,
+html:-webkit-full-screen body.playing-fullscreen #game {
+  width: 100%;
+  max-width: none;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 8px;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+html:fullscreen body.playing-fullscreen #game .help-panel,
+html:-webkit-full-screen body.playing-fullscreen #game .help-panel,
+html:fullscreen body.playing-fullscreen #game #helpPanel,
+html:-webkit-full-screen body.playing-fullscreen #game #helpPanel,
+html:fullscreen body.playing-fullscreen #game .instructions,
+html:-webkit-full-screen body.playing-fullscreen #game .instructions {
+  display: none !important;
+}
+@media (orientation: landscape) and (max-width: 1000px) {
+  html:fullscreen body.playing-fullscreen #game .game-layout,
+  html:-webkit-full-screen body.playing-fullscreen #game .game-layout {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+  html:fullscreen body.playing-fullscreen #game .game-layout > *,
+  html:-webkit-full-screen body.playing-fullscreen #game .game-layout > * {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  html:fullscreen body.playing-fullscreen #game canvas,
+  html:-webkit-full-screen body.playing-fullscreen #game canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 68dvh !important;
+    height: auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -579,5 +642,37 @@ document.addEventListener("fullscreenchange", function(){
  if (!document.fullscreenElement) document.body.classList.remove("playing-fullscreen");
 });
 </script>
+
+<script>
+(function(){
+  function setMobilePlayLayout(){
+    if(!document.body.classList.contains("playing-fullscreen")) return;
+    const game = document.getElementById("game");
+    if(!game) return;
+    const headings = game.querySelectorAll("h1,h2,h3,h4,strong,b");
+    headings.forEach(function(el){
+      if((el.textContent || "").trim().includes("Petunjuk")){
+        let panel = el;
+        for(let i=0; i<5 && panel && panel.parentElement; i++){
+          if(panel.parentElement === game) break;
+          panel = panel.parentElement;
+          const r = panel.getBoundingClientRect();
+          if(r.width > 150 && r.height > 100){
+            panel.dataset.mobileHelpHidden = "1";
+            panel.style.setProperty("display","none","important");
+            break;
+          }
+        }
+      }
+    });
+  }
+  document.addEventListener("fullscreenchange", setMobilePlayLayout);
+  document.addEventListener("webkitfullscreenchange", setMobilePlayLayout);
+  window.addEventListener("resize", setMobilePlayLayout);
+  const observer = new MutationObserver(setMobilePlayLayout);
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
