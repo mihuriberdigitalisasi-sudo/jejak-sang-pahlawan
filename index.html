@@ -168,71 +168,24 @@ button:active { transform: translateY(1px); }
 }
 
 
-/* Mobile play mode: fullscreen landscape when supported */
-html { min-height: 100%; }
-body.playing-fullscreen { margin: 0; overflow: auto; }
-#game:fullscreen {
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  max-width: none;
-  min-height: 0;
-  margin: 0;
-  border-radius: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  touch-action: pan-y;
-  padding: clamp(8px, 1.5vw, 18px);
-  box-sizing: border-box;
-  background: #fff;
-  scroll-behavior: auto;
-}
-#game:fullscreen .game-layout,
-#game:fullscreen .gamebox,
-#game:fullscreen .canvas-wrap {
-  min-height: 0;
-  max-height: none;
-}
-#game:fullscreen .game-layout {
-  align-items: start;
-}
-#game:fullscreen canvas {
-  touch-action: pan-y;
-}
-#game:fullscreen .hud { gap: 8px; }
-#game:fullscreen canvas {
-  max-width: 100%;
-  max-height: calc(100dvh - 150px);
-  object-fit: contain;
-}
-#game:fullscreen .game-area,
-#game:fullscreen .canvas-wrap { max-width: 100%; }
-#rotateHint {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: #102d45;
-  color: #fff;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 28px;
-  font: 700 1.15rem/1.5 system-ui, sans-serif;
-}
-#rotateHint .hint-inner { max-width: 320px; }
-#rotateHint .rotate-icon { display: block; font-size: 3rem; margin-bottom: 14px; }
-@media (orientation: portrait) and (max-width: 900px) {
-  body.playing-fullscreen #rotateHint { display: flex; }
-}
-@media (max-width: 760px) {
-  #game:fullscreen { padding: 8px; }
-  #game:fullscreen .hud h2 { font-size: 1.05rem; }
-  #game:fullscreen .muted { font-size: .78rem; }
-  #game:fullscreen button { padding: 7px 10px; font-size: .82rem; }
+/* Fullscreen pada level aktif, bukan pada panel game yang masih tersembunyi */
+html:fullscreen { width:100%; height:100%; overflow:auto; background:#eaf7f3; }
+html:fullscreen body { min-height:100%; margin:0; overflow:auto; overscroll-behavior:auto; }
+html:fullscreen body.playing-fullscreen .wrap { width:100%; max-width:none; margin:0; padding:8px; }
+html:fullscreen #game { width:100%; max-width:none; min-height:100%; margin:0; overflow:visible; border-radius:12px; }
+html:fullscreen #game .game-layout, html:fullscreen #game .gamebox, html:fullscreen #game .canvas-wrap { min-height:0; max-height:none; }
+html:fullscreen #game .canvas-wrap { overflow:hidden; touch-action:pan-y; }
+html:fullscreen #game canvas { max-width:100%; max-height:56vh; object-fit:contain; touch-action:pan-y; }
+#rotateHint { display:none; position:fixed; inset:0; z-index:99999; background:#102d45; color:#fff; align-items:center; justify-content:center; text-align:center; padding:28px; font:700 1.15rem/1.5 system-ui,sans-serif; }
+#rotateHint .hint-inner { max-width:320px; }
+#rotateHint .rotate-icon { display:block; font-size:3rem; margin-bottom:14px; }
+@media (orientation:portrait) and (max-width:900px) { body.playing-fullscreen #rotateHint { display:flex; } }
+@media (max-width:760px) {
+ html:fullscreen body.playing-fullscreen .wrap { padding:5px; }
+ html:fullscreen #game { padding:8px; }
+ html:fullscreen #game .hud h2 { font-size:1rem; }
+ html:fullscreen #game .muted { font-size:.78rem; }
+ html:fullscreen #game button { padding:7px 10px; font-size:.82rem; }
 }
 
 </style>
@@ -441,7 +394,23 @@ function updateTeamHud(){const hud=$("teamHud");if(!hud)return;hud.classList.tog
 function notify(msg){const t=$("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add("hidden"),2200);}
 function beep(freq=660,dur=.12,type="sine"){if(!state.sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);}catch(e){}}
 function renderMap(){const box=$("levelCards");box.innerHTML="";levels.forEach((l,i)=>{const unlocked=i===0||state.completed[i-1],done=state.completed[i];const d=document.createElement("div");d.className="levelcard"+(!unlocked?" locked":"")+(done?" done":"");d.innerHTML=`<div class="emoji">${l.emoji}</div><h3>Level ${i+1}: ${l.title}</h3><p>${l.desc}</p><div><b>${done?"✅ Selesai":unlocked?"🔓 Terbuka":"🔒 Terkunci"}</b></div><button ${unlocked?"":"disabled"}>${done?"Mainkan Lagi":"Mulai Level"}</button>`;d.querySelector("button").addEventListener("click",()=>startLevel(i));box.appendChild(d);});updateStats();}
-function startLevel(i){if(i>0&&!state.completed[i-1])return;state.level=i;player={x:60,y:320,w:34,h:45,vx:0,vy:0,onGround:false};camera=0;gameActive=true;showOnly("game");$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
+function startLevel(i){
+ if(i>0&&!state.completed[i-1])return;
+ /* Masuk layar penuh hanya saat pemain menekan tombol Mulai Level. */
+ document.body.classList.add("playing-fullscreen");
+ try {
+   if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+     const fs = document.documentElement.requestFullscreen();
+     if (fs && typeof fs.catch === "function") fs.catch(function(){});
+   }
+ } catch(e) {}
+ try {
+   if (screen.orientation && screen.orientation.lock) {
+     const lock = screen.orientation.lock("landscape");
+     if (lock && typeof lock.catch === "function") lock.catch(function(){});
+   }
+ } catch(e) {}
+ state.level=i;player={x:60,y:320,w:34,h:45,vx:0,vy:0,onGround:false};camera=0;gameActive=true;showOnly("game");$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
 function renderProgress(){const done=state.answered[state.level].filter(Boolean).length;$("questionProgress").textContent=`📚 Tantangan ${done}/10`;$("progressBar").style.width=(done*10)+"%";updateStats();}
 function chestLocations(){return Array.from({length:10},(_,i)=>({x:130+i*132,y:340}));}
 function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}}
@@ -529,7 +498,15 @@ $("soloModeBtn").addEventListener("click",()=>{state.groupMode=false;$("soloMode
 $("teamModeBtn").addEventListener("click",()=>{state.groupMode=true;$("teamModeBtn").classList.add("active");$("soloModeBtn").classList.remove("active");$("teamSetup").classList.remove("hidden");});
 $("startBtn").addEventListener("click",()=>{state.name=$("playerName").value.trim()||"Penjelajah";if(state.groupMode){state.teams=$("teamNames").value.split(",").map(x=>x.trim()).filter(Boolean).slice(0,6);if(state.teams.length<2)state.teams=["Tim Garuda","Tim Komodo"];state.teamScores=state.teams.map(()=>0);state.activeTeam=0;}else{state.teams=[];state.teamScores=[];state.activeTeam=0;}updateTeamHud();$("welcomeText").textContent=state.groupMode?`Mode kelompok aktif: ${state.teams.join(", ")}. Bergiliran dan kumpulkan poin!`:`Ayo, ${state.name}! Pilih level yang terbuka.`;renderMap();showOnly("map");beep(550,.12);});
 $("howBtn").addEventListener("click",()=>alert("CARA BERMAIN\n\n1. Mulai petualangan dan pilih Level 1.\n2. Bergerak dengan tombol ← → atau A/D.\n3. Dekati peti 📦, lalu tekan E atau tombol Buka Peti.\n4. Jawab pertanyaan dan baca pembahasannya.\n5. Jawaban benar pertama kali mendapat 100 poin dan 10 koin.\n6. Selesaikan 10 soal untuk mendapat lencana dan membuka level berikutnya.\n7. Di ponsel, gunakan tombol kontrol di bawah arena.\n8. Mode kelompok: masukkan nama 2–6 tim; setiap tim bergiliran menjawab pada perangkat yang sama."));
-$("homeBtn").addEventListener("click",()=>showOnly("home"));$("mapBtn").addEventListener("click",()=>{gameActive=false;renderMap();showOnly("map");});$("resultMapBtn").addEventListener("click",()=>{renderMap();showOnly("map");});$("againBtn").addEventListener("click",resetGame);
+$("homeBtn").addEventListener("click",()=>{
+ showOnly("home");
+ if(document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(function(){});}
+ document.body.classList.remove("playing-fullscreen");
+});$("mapBtn").addEventListener("click",()=>{
+ gameActive=false;renderMap();showOnly("map");
+ if(document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(function(){});}
+ document.body.classList.remove("playing-fullscreen");
+});$("resultMapBtn").addEventListener("click",()=>{renderMap();showOnly("map");});$("againBtn").addEventListener("click",resetGame);
 $("soundBtn").addEventListener("click",()=>{state.sound=!state.sound;$("soundBtn").textContent=state.sound?"🔊 Suara: ON":"🔇 Suara: OFF";$("soundBtn").setAttribute("aria-pressed",String(!state.sound));if(state.sound)beep();});
 $("leftBtn").addEventListener("pointerdown",e=>{e.preventDefault();keys.ArrowLeft=true;});["pointerup","pointerleave","pointercancel"].forEach(ev=>$("leftBtn").addEventListener(ev,()=>keys.ArrowLeft=false));
 $("rightBtn").addEventListener("pointerdown",e=>{e.preventDefault();keys.ArrowRight=true;});["pointerup","pointerleave","pointercancel"].forEach(ev=>$("rightBtn").addEventListener(ev,()=>keys.ArrowRight=false));
@@ -598,52 +575,9 @@ try {
 </div>
 
 <script>
-(function(){
-  const startButton = document.getElementById('startBtn');
-  const gamePanel = document.getElementById('game');
-  if (!startButton || !gamePanel) return;
-  startButton.addEventListener('click', function(){
-    document.body.classList.add('playing-fullscreen');
-    const target = gamePanel;
-    /* Mulai dari bagian paling atas; area game yang penuh layar tetap bisa digulir. */
-    target.scrollTop = 0;
-    window.scrollTo(0, 0);
-    try {
-      if (!document.fullscreenElement && target.requestFullscreen) {
-        const request = target.requestFullscreen();
-        if (request && typeof request.catch === 'function') request.catch(function(){});
-      }
-    } catch (e) {}
-    try {
-      if (screen.orientation && screen.orientation.lock) {
-        const lock = screen.orientation.lock('landscape');
-        if (lock && typeof lock.catch === 'function') lock.catch(function(){});
-      }
-    } catch (e) {}
-  });
-  document.addEventListener('fullscreenchange', function(){
-    if (!document.fullscreenElement) {
-      document.body.classList.remove('playing-fullscreen');
-    } else if (document.fullscreenElement === gamePanel) {
-      gamePanel.scrollTop = 0;
-      window.scrollTo(0, 0);
-    }
-  });
-  const mapButton = document.getElementById('mapBtn');
-  if (mapButton) mapButton.addEventListener('click', function(){
-    if (document.fullscreenElement && document.exitFullscreen) {
-      document.exitFullscreen().catch(function(){});
-    }
-    document.body.classList.remove('playing-fullscreen');
-  });
-  const homeButton = document.getElementById('homeBtn');
-  if (homeButton) homeButton.addEventListener('click', function(){
-    if (document.fullscreenElement && document.exitFullscreen) {
-      document.exitFullscreen().catch(function(){});
-    }
-    document.body.classList.remove('playing-fullscreen');
-  });
-})();
+document.addEventListener("fullscreenchange", function(){
+ if (!document.fullscreenElement) document.body.classList.remove("playing-fullscreen");
+});
 </script>
 </body>
 </html>
