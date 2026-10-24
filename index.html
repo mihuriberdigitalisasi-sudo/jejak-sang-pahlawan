@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jejak Sang Pahlawan — Petualangan Menembus Waktu</title>
+<style>
+:root{--navy:#17324d;--cream:#fff8e8;--gold:#ffd166;--green:#2b9348;--blue:#2b6cb0;--red:#d1495b}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--navy);background:linear-gradient(180deg,#c8f1ff,#f9f4d7);min-height:100vh}
+button,input{font:inherit} button{border:0;border-radius:12px;padding:10px 15px;font-weight:800;cursor:pointer;background:var(--gold);color:#263238;box-shadow:0 3px 0 #d6a83e;transition:transform .08s}button:active{transform:translateY(2px);box-shadow:0 1px 0 #d6a83e}button:disabled{opacity:.45;cursor:not-allowed}
+.wrap{max-width:1100px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand{font-weight:1000;letter-spacing:.3px}.pill{background:#fff;border:2px solid #d7e6ed;border-radius:999px;padding:7px 12px;font-weight:800}
+.panel{background:rgba(255,255,255,.92);border:3px solid #fff;border-radius:22px;padding:20px;box-shadow:0 8px 24px #2345  ;margin-top:14px}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.02;margin-bottom:12px}h2{margin-bottom:8px}.sub{font-size:1.1rem;line-height:1.55}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:center}.hero-art{min-height:260px;border-radius:22px;background:linear-gradient(#65d8ff 0%,#c5f4ff 58%,#ffeaa7 59%,#91d66f 60%);position:relative;overflow:hidden;display:grid;place-items:center;font-size:6rem;box-shadow:inset 0 -10px 0 #3f9e52,0 8px 0 #d6e8ef}.sun{position:absolute;right:28px;top:20px;font-size:3rem}.cloud{position:absolute;left:24px;top:32px;font-size:2.5rem}.hero-person{filter:drop-shadow(0 8px 0 #17324d22);z-index:2}.hill{position:absolute;bottom:-45px;width:125%;height:130px;border-radius:50%;background:#4f9d69}.hill.two{bottom:-72px;left:-45%;background:#2d6a4f}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:0 0 auto}.muted{color:#52697a}.hidden{display:none!important}.mapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative}.levelcard{position:relative;isolation:isolate;overflow:hidden;border:3px solid #d9e7ed;border-radius:22px;padding:18px;background:linear-gradient(160deg,#ffffff 0%,#f1fbff 100%);min-height:220px;display:flex;flex-direction:column;gap:9px;box-shadow:0 7px 0 #d6e4ec,0 12px 22px #17324d12;transition:transform .2s,box-shadow .2s}.levelcard:before{content:"";position:absolute;z-index:-1;width:160px;height:100px;right:-25px;top:-25px;border-radius:50%;background:linear-gradient(135deg,#a8e6cf,#d4f6ff);opacity:.75}.levelcard:hover{transform:translateY(-5px);box-shadow:0 12px 0 #d6e4ec,0 18px 25px #17324d18}.levelcard .emoji{font-size:2.7rem;filter:drop-shadow(0 4px 0 #17324d18)}.levelcard h3{line-height:1.25}.levelcard p{line-height:1.45}.levelcard:nth-child(1){border-bottom:6px solid #45b5e8}.levelcard:nth-child(2){border-bottom:6px solid #f0a04b}.levelcard:nth-child(3){border-bottom:6px solid #5dbb78}.levelcard .emoji{font-size:2.4rem}.levelcard h3{margin:0}.levelcard p{font-size:.92rem;margin:0;flex:1}.levelcard.locked{filter:grayscale(.65);background:linear-gradient(160deg,#f0f2f4,#dce4e8)}.levelcard.done{border-color:#55a630;background:linear-gradient(160deg,#f7ffef,#e0ffd4)}.levelcard button{margin-top:5px}.levelcard:nth-child(2):before{background:linear-gradient(135deg,#ffd6a5,#ffb4a2)}.levelcard:nth-child(3):before{background:linear-gradient(135deg,#b8f2e6,#caffbf)}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}.meter{height:10px;background:#e6eef2;border-radius:999px;overflow:hidden;min-width:120px;flex:1}.meter span{display:block;height:100%;background:var(--green);width:0;transition:width .25s}
+.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px}.gamebox{min-width:0}.canvas-wrap{position:relative;border:4px solid #fff;border-radius:18px;overflow:hidden;background:#a9e8ff;box-shadow:0 5px 0 #b9d3dc}.canvas-wrap canvas{display:block;width:100%;height:auto;image-rendering:auto;touch-action:pan-y}.gamehelp{font-size:.9rem;line-height:1.45}.sidebox{background:#f7fbff;border:2px solid #e2edf4;border-radius:16px;padding:14px}.sidebox h3{margin-bottom:8px}.controls{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}.controls button{min-width:54px;touch-action:manipulation}.quest-note{background:#fff5ce;border:2px solid #ffe08a;border-radius:12px;padding:10px;margin-top:10px;font-weight:700}
+.modalback{position:fixed;inset:0;background:#10283dcc;display:grid;place-items:center;padding:14px;z-index:20}.modal{background:#fffdf5;border:4px solid #fff;border-radius:22px;max-width:650px;width:100%;max-height:92vh;overflow:auto;padding:22px;box-shadow:0 15px 50px #0005}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.answers button{background:#edf6ff;box-shadow:0 3px 0 #c3d8e8;text-align:left;white-space:normal}.answers button.correct{background:#d9f8d5;box-shadow:0 3px 0 #7cbd71}.answers button.wrong{background:#ffe0e0;box-shadow:0 3px 0 #df9a9a}.feedback{padding:13px;border-radius:12px;margin-top:14px;line-height:1.5}.feedback.good{background:#e4f8dd;border:2px solid #9ed58c}.feedback.bad{background:#fff0d4;border:2px solid #f4c66b}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;flex-wrap:wrap}.badgegrid{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.badgeitem{background:#fff1b8;border:2px solid #e7bb45;border-radius:15px;padding:10px 12px;font-weight:800}.footer{text-align:center;color:#52697a;font-size:.85rem;padding:18px}
+/* Visual polish and cooperative play */
+:root{--navy:#102b46;--gold:#ffd166;--green:#239b67}
+body{background:radial-gradient(circle at 12% 8%,#fff8cf 0,transparent 27%),linear-gradient(145deg,#a8e8ff 0%,#d9f8ed 45%,#fff0c9 100%)}
+.panel{box-shadow:0 16px 38px #153a5820, inset 0 1px 0 #fff}
+.hero-art{background:radial-gradient(circle at 78% 17%,#fff9a8 0 5%,transparent 5.5%),linear-gradient(180deg,#48b7f2 0%,#a7efff 52%,#fbd58a 53%,#66c982 100%);box-shadow:inset 0 -12px 0 #248451,0 10px 0 #d6e8ef}
+.levelcard{background:linear-gradient(150deg,#fff 0%,#e9f9ff 65%,#fff4d8 100%);backdrop-filter:blur(4px)}
+.levelcard:after{content:"✦  ✧  ✦";position:absolute;right:13px;bottom:10px;color:#f1b84b;font-size:1.1rem;letter-spacing:5px;opacity:.65;pointer-events:none}
+.coopbox{margin-top:14px;padding:14px;border:2px solid #cce7f0;border-radius:16px;background:linear-gradient(120deg,#f1fbff,#fff8e6)}
+.coopbox input{padding:10px;border:2px solid #c9dbe5;border-radius:10px;width:min(100%,460px);margin:6px 0}
+.modebtn.active{background:#b8f2d2;box-shadow:0 3px 0 #63b98a}
+.teamhud{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+.teamtag{background:#e8f8ff;border:2px solid #a8d9ee;border-radius:12px;padding:7px 10px;font-weight:800}
+.canvas-wrap{border:4px solid #fff;box-shadow:0 8px 0 #b9d3dc,0 14px 28px #17324d18}
+.controls button{min-height:48px;min-width:58px;box-shadow:0 4px 0 #d6a83e}
+@media(max-width:760px){.coopbox input{width:100%}.controls{gap:6px}.controls button{flex:1;min-width:0;padding:10px 7px}}
+
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero-art{min-height:190px;font-size:4.5rem}.mapgrid{grid-template-columns:1fr}.game-layout{grid-template-columns:1fr}.sidebox{order:2}.answers{grid-template-columns:1fr}.panel{padding:14px}.wrap{padding:10px}}
+
+/* HOME REDESIGN: calmer layout, clearer hierarchy, less visual clutter */
+body {
+  background: linear-gradient(135deg, #eaf7f3 0%, #f5f9ff 58%, #fff4df 100%);
+  color: #18324b;
+}
+.wrap { max-width: 1180px; padding: 18px 22px 28px; }
+.top { padding: 2px 4px 10px; }
+.brand { font-size: 1.02rem; letter-spacing: .7px; }
+.top .row { gap: 8px; }
+.pill { border: 1px solid #dce7ef; box-shadow: 0 2px 8px #17324d08; }
+#soundBtn { background: #fff; box-shadow: 0 2px 0 #d6e1e8; border: 1px solid #dce7ef; }
+.panel { border: 1px solid #e1ebf1; border-radius: 26px; background: #fff; box-shadow: 0 18px 50px #18324b0d; }
+#home.hero {
+  margin-top: 10px;
+  padding: clamp(22px, 3.4vw, 42px);
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+  gap: clamp(24px, 4vw, 54px);
+  align-items: center;
+  min-height: 560px;
+}
+#home > div:first-child { min-width: 0; }
+#home > div:first-child > .pill {
+  background: #f0f8ff;
+  border: 1px solid #d5e9f7;
+  color: #35617f;
+  padding: 7px 12px;
+  font-size: .86rem;
+  margin-bottom: 16px;
+}
+#home h1 {
+  font-size: clamp(2.55rem, 5vw, 4.15rem);
+  letter-spacing: -1.8px;
+  line-height: .99;
+  margin: 0 0 16px;
+}
+#home h1 span { color: #d97706 !important; }
+#home .sub { max-width: 520px; color: #52697a; font-size: 1.04rem; margin-bottom: 22px; }
+#home label { font-size: .91rem; }
+#playerName {
+  display: block;
+  width: min(100%, 390px) !important;
+  padding: 13px 15px !important;
+  border: 1px solid #cddde8 !important;
+  border-radius: 12px !important;
+  margin: 8px 0 18px !important;
+  outline-color: #58a8d5;
+}
+.coopbox {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid #dce8ef;
+  border-radius: 17px;
+  background: #f8fbfd;
+}
+#onlineBox { background: #f2fbf7 !important; border-color: #cde9dc !important; }
+#onlineBox > b, .coopbox > b { display: block; font-size: .98rem; margin-bottom: 7px; }
+#onlineBox p { line-height: 1.5; }
+.coopbox input {
+  background: #fff;
+  border: 1px solid #cddde8;
+  border-radius: 11px;
+  padding: 11px 12px;
+  margin: 4px 0 8px;
+  max-width: 100%;
+}
+#onlinePlayerName { width: 100%; }
+#onlineBox .row { display: grid; grid-template-columns: auto minmax(110px, 1fr) auto; gap: 8px; }
+#onlineBox .row button { white-space: nowrap; }
+button {
+  border-radius: 11px;
+  padding: 11px 15px;
+  background: #f8c95c;
+  color: #24364a;
+  box-shadow: 0 2px 0 #dca73a;
+  transition: transform .15s, filter .15s;
+}
+button:hover { filter: brightness(1.025); transform: translateY(-1px); }
+button:active { transform: translateY(1px); }
+#onlineBox button { font-size: .9rem; }
+#onlineStatus { font-size: .82rem !important; color: #607786; }
+#onlineRoomInfo { overflow-wrap: anywhere; }
+#home .coopbox:nth-of-type(2) { background: #fbfaf5; border-color: #eee6d5; }
+#home .coopbox:nth-of-type(2) .row { gap: 8px; }
+.modebtn.active { background: #d9f7e8; box-shadow: 0 2px 0 #8fc9ac; }
+#teamSetup input { width: 100%; }
+#home .row[style*="margin-top:12px"] { margin-top: 18px !important; gap: 10px; }
+#startBtn { background: #183f60; color: white; box-shadow: 0 3px 0 #102d45; padding: 13px 19px; }
+#howBtn { background: #fff; border: 1px solid #dce7ef; box-shadow: 0 2px 0 #dce7ef; }
+#home > div:first-child > p.muted:last-child { font-size: .82rem !important; margin-top: 18px !important; color: #8293a0; }
+.hero-art {
+  min-height: 390px;
+  border-radius: 28px;
+  font-size: 7rem;
+  box-shadow: inset 0 -12px 0 #248451, 0 18px 34px #18324b18;
+  isolation: isolate;
+}
+.hero-art:after {
+  content: "MISI: TEMUKAN JEJAK PARA PAHLAWAN";
+  position: absolute;
+  z-index: 3;
+  bottom: 22px;
+  left: 18px;
+  right: 18px;
+  text-align: center;
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  text-shadow: 0 2px 6px #17324d80;
+}
+.hero-person { transform: translateY(-4px); }
+.sun { font-size: 2.6rem; }
+.cloud { font-size: 2rem; }
+.footer { color: #8393a0; padding: 22px 10px 6px; }
+@media (max-width: 760px) {
+  .wrap { padding: 10px; }
+  .top { align-items: flex-start; }
+  .top .row { justify-content: flex-start; }
+  #home.hero { padding: 20px; gap: 20px; min-height: 0; }
+  #home h1 { font-size: clamp(2.45rem, 11vw, 3.4rem); }
+  .hero-art { min-height: 210px; font-size: 4.8rem; order: -1; }
+  .hero-art:after { font-size: .64rem; bottom: 15px; }
+  #onlineBox .row { grid-template-columns: 1fr 1fr; }
+  #onlineBox .row button { width: 100%; }
+  #roomCodeInput { grid-column: 1 / 2; width: 100% !important; }
+  #joinRoomBtn { grid-column: 2 / 3; }
+}
+@media (max-width: 420px) {
+  .top .row { gap: 5px; }
+  .top .pill, #soundBtn { font-size: .8rem; padding: 6px 8px; }
+  #onlineBox .row { grid-template-columns: 1fr; }
+  #roomCodeInput, #joinRoomBtn { grid-column: auto; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">🧭 JEJAK SANG PAHLAWAN</div>
+    <div class="row"><span class="pill" id="scorePill">⭐ Skor: 0</span><span class="pill" id="coinPill">🪙 Koin: 0</span><button id="soundBtn" aria-pressed="false">🔊 Suara: ON</button></div>
+  </header>
+
+  <section id="home" class="panel hero">
+    <div>
+      <p class="pill" style="display:inline-block">IPAS • Kelas 6 MI/SD</p>
+      <h1>Petualangan<br><span style="color:#d97706">Menembus Waktu!</span></h1>
+      <p class="sub">Jelajahi masa penjajahan, kenali para pahlawan, lalu temukan jejak perjuangan mereka di masa kini.</p>
+      <label for="playerName"><b>Nama penjelajah</b></label><br>
+      <input id="playerName" maxlength="24" placeholder="Tulis namamu..." style="padding:11px;border:2px solid #c9dbe5;border-radius:10px;width:min(100%,300px);margin:7px 0 14px">
+      <div class="coopbox" id="onlineBox" style="border-color:#79c7a1;background:linear-gradient(120deg,#edfff5,#effaff)">
+        <b>🌐 Multiplayer Online — Jelajah Bersama</b>
+        <p class="muted" style="margin:6px 0;font-size:.9rem">Masuk ruang yang sama agar penjelajah lain terlihat bergerak di duniamu. Skor dan progres tersimpan online.</p>
+        <input id="onlinePlayerName" maxlength="24" placeholder="Nama penjelajah online" aria-label="Nama penjelajah online">
+        <div class="row"><button type="button" id="createRoomBtn">✨ Buat Ruang</button><input id="roomCodeInput" maxlength="8" placeholder="Kode ruang" aria-label="Kode ruang" style="width:130px;text-transform:uppercase"><button type="button" id="joinRoomBtn">🚪 Gabung</button></div>
+        <p id="onlineStatus" role="status" class="muted" style="font-size:.88rem;margin:6px 0 0">Status: belum terhubung. Isi konfigurasi Firebase terlebih dahulu.</p>
+        <p id="onlineRoomInfo" style="font-weight:800;margin:5px 0 0"></p>
+      </div>
+      <div class="coopbox">
+        <b>👥 Pilih cara bermain</b>
+        <div class="row" style="margin:8px 0"><button type="button" id="soloModeBtn" class="modebtn active">🧭 Individu</button><button type="button" id="teamModeBtn" class="modebtn">🤝 Mode Kelompok</button></div>
+        <div id="teamSetup" class="hidden"><label for="teamNames"><b>Nama tim (pisahkan dengan koma)</b></label><br><input id="teamNames" maxlength="180" value="Tim Garuda, Tim Komodo, Tim Cendrawasih" placeholder="Tim Garuda, Tim Komodo, Tim Cendrawasih"><p class="muted" style="font-size:.88rem;margin:0">Bergiliran pada satu perangkat: tim bergerak bersama, berdiskusi, lalu menjawab tantangan. Skor dicatat per tim.</p></div>
+      </div>
+      <div class="row" style="margin-top:12px"><button id="startBtn">🚀 Mulai Petualangan</button><button id="howBtn">📜 Cara Bermain</button></div>
+      <p class="muted" style="margin-top:14px;font-size:.9rem">Slogan: “Kenali Perjuangannya, Lanjutkan Semangatnya!”</p>
+    </div>
+    <div class="hero-art" aria-label="Ilustrasi petualangan">
+      <span class="sun">☀️</span><span class="cloud">☁️</span><span class="hero-person">🦸🏻</span><div class="hill"></div><div class="hill two"></div>
+    </div>
+  </section>
+
+  <section id="map" class="panel hidden">
+    <div class="hud"><div><h2>🗺️ Peta Perjalanan</h2><p class="muted" id="welcomeText">Pilih jalur petualanganmu. Setiap dunia menyimpan tantangan dan lencana!</p></div><button id="homeBtn">🏠 Beranda</button></div>
+    <div class="mapgrid" id="levelCards"></div>
+    <div class="quest-note">🎯 Misi akhir: kumpulkan tiga Lencana Jejak Pahlawan dan jadilah Penjaga Jejak Pahlawan!</div>
+  </section>
+
+  <section id="game" class="panel hidden">
+    <div class="hud">
+      <div><h2 id="levelTitle">Level 1</h2><div class="muted" id="levelSub">Jelajahi dan temukan peti pengetahuan.</div></div>
+      <button id="mapBtn">🗺️ Peta</button>
+    </div>
+    <div class="hud"><span class="pill" id="questionProgress">📚 Tantangan 0/10</span><div class="meter"><span id="progressBar"></span></div><span class="pill" id="badgeCount">🏅 0/6</span></div>
+    <div id="teamHud" class="teamhud hidden"><span class="teamtag" id="activeTeamTag">🤝 Giliran: Tim Garuda</span><span class="teamtag" id="teamScoreTag">Papan skor tim</span></div>
+    <div class="game-layout">
+      <div class="gamebox">
+        <div class="canvas-wrap"><canvas id="world" width="900" height="440" aria-label="Dunia permainan platformer"></canvas></div>
+        <div class="controls">
+          <button id="leftBtn" aria-label="Bergerak ke kiri">⬅️</button><button id="jumpBtn" aria-label="Melompat">⬆️ LOMPAT</button><button id="rightBtn" aria-label="Bergerak ke kanan">➡️</button><button id="interactBtn">📦 Buka Peti</button>
+        </div>
+      </div>
+      <aside class="sidebox">
+        <h3>🎮 Petunjuk</h3>
+        <p class="gamehelp">Bergeraklah menuju peti pengetahuan 📦. Dekati peti lalu tekan <b>E</b> atau tombol <b>Buka Peti</b> untuk menjawab pertanyaan.</p>
+        <p class="gamehelp">Keyboard: <b>← →</b> atau <b>A D</b> untuk bergerak, <b>↑ / W / Spasi</b> untuk melompat, <b>E</b> untuk membuka peti.</p>
+        <p class="gamehelp">Di ponsel, gunakan tombol kontrol di bawah arena.</p>
+        <div class="quest-note" id="missionNote">Temukan peti pengetahuan pertama!</div>
+        <p class="gamehelp muted" id="factText">Setiap jawaban benar mendapat 100 poin dan 10 koin.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="result" class="panel hidden">
+    <h1>🏆 Petualangan Selesai!</h1><p class="sub" id="resultIntro"></p>
+    <div class="badgegrid" id="resultBadges"></div>
+    <div class="row"><span class="pill" id="finalScore"></span><span class="pill" id="finalCoins"></span><span class="pill" id="finalCorrect"></span></div>
+    <h2 style="margin-top:22px">🌟 Gelar Penjelajah</h2><p class="sub" id="rankText"></p>
+    <h3>💭 Refleksi Generasi Penerus</h3><p>Apa yang bisa kamu lakukan untuk melanjutkan perjuangan para pahlawan di sekolah dan lingkunganmu?</p>
+    <div class="row"><button class="reflection" data-ref="Belajar sungguh-sungguh dan menggunakan ilmu untuk membantu masyarakat.">📚 Belajar sungguh-sungguh</button><button class="reflection" data-ref="Menjaga persatuan dan menghargai perbedaan.">🤝 Menjaga persatuan</button><button class="reflection" data-ref="Membantu sesama dan merawat fasilitas umum.">🌱 Peduli lingkungan</button></div>
+    <p id="reflectionResponse" class="quest-note hidden"></p>
+    <div class="row" style="margin-top:20px"><button id="againBtn">🔄 Main Lagi</button><button id="resultMapBtn">🗺️ Kembali ke Peta</button></div>
+  </section>
+  <div class="footer">Game edukasi IPAS • Jejak Sang Pahlawan • Dibuat untuk belajar sambil berpetualang.</div>
+</div>
+
+<div id="modalBack" class="modalback hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <p class="pill" id="modalLevel" style="display:inline-block">Misi</p>
+    <h2 id="modalTitle">Pertanyaan</h2><p id="questionText"></p>
+    <div id="answerArea" class="answers"></div>
+    <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+    <div class="modal-actions"><button id="retryBtn" class="hidden">🔁 Coba Lagi</button><button id="continueBtn" class="hidden">Lanjutkan ➜</button></div>
+  </div>
+</div>
+<div id="toast" class="hidden" style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#17324d;color:white;padding:12px 18px;border-radius:12px;z-index:40;box-shadow:0 6px 20px #0003"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script>
+"use strict";
+// Kompatibilitas: sediakan roundRect untuk browser yang belum mendukungnya.
+if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    r = Math.max(0, Math.min(Number(r) || 0, Math.abs(w) / 2, Math.abs(h) / 2));
+    this.beginPath();
+    this.moveTo(x + r, y); this.lineTo(x + w - r, y); this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r); this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h); this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r); this.quadraticCurveTo(x, y, x + r, y); this.closePath();
+    return this;
+  };
+}
+// Jika ada error runtime, tampilkan pesan yang bisa dibaca alih-alih halaman tampak kosong.
+window.addEventListener('error', function(ev) {
+  let box = document.getElementById('runtimeError');
+  if (!box) {
+    box = document.createElement('div'); box.id = 'runtimeError';
+    box.style.cssText = 'position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;background:#fff0d4;color:#512b13;border:2px solid #d97706;border-radius:12px;padding:14px;font:14px/1.5 system-ui;white-space:pre-wrap';
+    document.body.appendChild(box);
+  }
+  box.textContent = 'Game mengalami kesalahan saat dijalankan. Coba tutup file lalu buka kembali.\nDetail: ' + (ev.message || 'Kesalahan JavaScript') + (ev.filename ? '\nLokasi: ' + ev.filename.split('/').pop() + ':' + ev.lineno : '');
+});
+const levels = [
+ {title:"Daerahku di Masa Penjajahan",short:"Misi Sejarah",emoji:"🏡",badge:"🏅 Lencana Sejarah",theme:0,desc:"Telusuri kehidupan masyarakat pada masa kolonial.",questions:[
+ ["Salah satu tujuan utama Belanda menerapkan sistem tanam paksa pada abad ke-19 adalah ....",["Meningkatkan kesejahteraan semua petani Indonesia","Memperoleh hasil tanaman ekspor untuk kepentingan pemerintah kolonial","Memberikan pendidikan gratis kepada seluruh rakyat","Menghapus seluruh pajak rakyat"],1,"Sistem tanam paksa mewajibkan penduduk menanam tanaman tertentu untuk kepentingan kolonial dan menimbulkan penderitaan di banyak wilayah."],
+ ["Bagaimana kesempatan pendidikan bagi sebagian besar rakyat pribumi pada masa kolonial?",["Semua orang memperoleh pendidikan tinggi secara gratis","Pendidikan belum dapat diakses secara merata","Semua desa memiliki universitas","Semua anak wajib bersekolah sampai perguruan tinggi"],1,"Kesempatan pendidikan pada masa kolonial terbatas dan tidak merata."],
+ ["Salah satu dampak penjajahan terhadap kehidupan ekonomi rakyat adalah ....",["Seluruh rakyat bebas menentukan kebijakan perdagangan","Semua petani menjadi kaya","Sebagian rakyat mengalami beban kerja dan ekonomi yang berat","Tidak ada aturan perdagangan"],2,"Kebijakan kolonial dapat membebani penduduk dan menguntungkan kepentingan pemerintah kolonial."],
+ ["Mengapa bangsa Indonesia melakukan perlawanan terhadap penjajahan?",["Ingin kehilangan haknya sendiri","Ingin memperoleh kebebasan dan menentukan nasib sendiri","Ingin menutup semua sekolah","Ingin menghapus seluruh kebudayaan daerah"],1,"Perlawanan dilakukan untuk menentang penindasan dan memperjuangkan kebebasan."],
+ ["Bagaimana cara yang tepat untuk mengetahui sejarah perjuangan di daerah kita?",["Mengandalkan cerita yang belum jelas sumbernya","Mengabaikan peninggalan sejarah","Mempelajari sumber sejarah, museum, arsip, dan keterangan yang dapat dipercaya","Mengubah cerita agar lebih menarik"],2,"Sejarah perlu dipelajari melalui sumber yang dapat diperiksa."],
+ ["Pada masa penjajahan, tidak semua masyarakat memiliki akses pendidikan yang sama. Hal ini menunjukkan adanya ....",["Pemerataan pendidikan sempurna","Ketimpangan kesempatan pendidikan","Kesamaan hak dalam semua bidang","Hilangnya seluruh sekolah"],1,"Akses pendidikan berbeda-beda menurut kebijakan kolonial dan keadaan sosial."],
+ ["Apa yang dapat terjadi ketika masyarakat dipaksa menanam tanaman ekspor untuk kepentingan kolonial?",["Kebutuhan pangan rakyat selalu terpenuhi","Tidak ada perubahan pada kehidupan petani","Sebagian petani dapat mengalami kesulitan memenuhi kebutuhan pangan","Seluruh penduduk berhenti bertani"],2,"Kewajiban menanam tanaman tertentu dapat mengurangi waktu atau lahan untuk tanaman pangan, meskipun dampaknya berbeda antarwilayah."],
+ ["Mengapa peninggalan bangunan atau dokumen lama penting dipelajari?",["Agar kita dapat memahami kehidupan dan peristiwa pada masa lalu","Agar semua bangunan lama dirobohkan","Agar sejarah tidak perlu dipelajari","Agar cerita sejarah boleh diubah sesuka hati"],0,"Peninggalan sejarah membantu kita memahami kehidupan masa lalu."],
+ ["Sikap yang tepat ketika mempelajari penderitaan masyarakat pada masa penjajahan adalah ....",["Menertawakan penderitaan mereka","Menganggap perjuangan mereka tidak penting","Menghargai perjuangan dan mengambil pelajaran dari sejarah","Mengulangi tindakan penindasan"],2,"Sejarah mengajarkan empati, penghargaan terhadap perjuangan, dan pentingnya keadilan."],
+ ["Apa manfaat membandingkan kehidupan masyarakat dahulu dengan sekarang?",["Mengetahui perubahan dan hal-hal yang masih perlu diperbaiki","Menentukan bahwa masa lalu tidak berguna","Menghilangkan identitas daerah","Membuat kita berhenti mempelajari sejarah"],0,"Perbandingan membantu kita memahami perubahan sosial, ekonomi, budaya, dan pendidikan."]
+ ]},
+ {title:"Para Pahlawan Daerahku",short:"Misi Kepahlawanan",emoji:"🛡️",badge:"🏅 Lencana Kepahlawanan",theme:1,desc:"Kenali tokoh perjuangan dan nilai kepahlawanan.",questions:[
+ ["Pahlawan nasional adalah ....",["Setiap orang yang terkenal di media sosial","Seseorang yang mendapat pengakuan resmi sebagai pahlawan nasional sesuai ketentuan negara","Semua orang yang pernah menjadi pejabat","Semua orang yang memiliki banyak pengikut"],1,"Gelar Pahlawan Nasional diberikan secara resmi melalui proses dan ketentuan yang berlaku."],
+ ["Raden Ajeng Kartini dikenal karena perjuangannya dalam ....",["Memajukan pendidikan dan kedudukan perempuan","Mendirikan perusahaan dagang kolonial","Memimpin penaklukan wilayah luar negeri","Menghapus semua sekolah"],0,"Kartini memperjuangkan kemajuan perempuan, terutama melalui gagasan tentang pendidikan."],
+ ["Pangeran Diponegoro dikenal memimpin perlawanan besar terhadap Belanda dalam ....",["Perang Jawa (1825–1830)","Perang Diponegoro pada abad ke-20","Perang Pasifik","Pertempuran Surabaya 1945"],0,"Perang Diponegoro berlangsung pada 1825–1830 di Jawa."],
+ ["Bung Tomo dikenal dalam sejarah perjuangan Indonesia karena perannya dalam ....",["Pertempuran Surabaya pada November 1945","Sistem tanam paksa","Pembangunan Candi Borobudur","Perang Diponegoro"],0,"Bung Tomo dikenal melalui pidato dan perannya membangkitkan semangat perjuangan rakyat Surabaya."],
+ ["Sikap berani yang mencerminkan nilai kepahlawanan adalah ....",["Menindas teman yang lebih lemah","Membela teman yang diperlakukan tidak adil dengan cara yang aman dan tepat","Melanggar aturan untuk mendapat pujian","Memaksakan pendapat kepada semua orang"],1,"Keberanian harus disertai tanggung jawab dan penghormatan terhadap orang lain."],
+ ["Contoh nilai persatuan dalam kehidupan sekolah adalah ....",["Memilih teman berdasarkan asal daerah saja","Bekerja sama dengan teman tanpa membeda-bedakan","Menolak tugas kelompok","Mengejek bahasa daerah teman"],1,"Persatuan tumbuh melalui kerja sama dan penghargaan terhadap perbedaan."],
+ ["Apa arti rela berkorban dalam perjuangan?",["Mengorbankan orang lain demi kepentingan sendiri","Bersedia memberikan waktu, tenaga, atau kepentingan pribadi untuk tujuan baik bersama","Selalu mengikuti perintah tanpa berpikir","Menolak membantu orang lain"],1,"Rela berkorban berarti mendahulukan kepentingan bersama secara bertanggung jawab."],
+ ["Jika ingin mengenali pahlawan dari Kabupaten Lamongan, sumber informasi yang paling tepat adalah ....",["Cerita anonim yang tidak memiliki bukti","Sumber sejarah yang dapat dipercaya, arsip, museum, atau informasi resmi pemerintah","Tebakan teman","Komentar media sosial tanpa verifikasi"],1,"Informasi tentang tokoh dan sejarah lokal perlu diperiksa melalui sumber tepercaya."],
+ ["Mengapa kita perlu mempelajari tokoh perjuangan dari daerah sendiri?",["Agar merasa daerah sendiri lebih hebat daripada daerah lain","Agar mengenal sejarah daerah dan menghargai kontribusi masyarakatnya","Agar tidak mempelajari sejarah nasional","Agar melupakan budaya daerah lain"],1,"Sejarah lokal membantu kita mengenali identitas daerah sekaligus menghargai perjuangan bangsa."],
+ ["Seorang siswa tetap berusaha menyelesaikan tugas kelompok meskipun menghadapi kesulitan. Sikap ini mencerminkan ....",["Pantang menyerah dan tanggung jawab","Kesombongan","Sikap tidak peduli","Keinginan menguasai teman"],0,"Ketekunan dan tanggung jawab merupakan nilai yang dapat dipelajari dari perjuangan para pahlawan."]
+ ]},
+ {title:"Jejak Mereka di Masa Kini",short:"Misi Warisan Perjuangan",emoji:"🌱",badge:"🏅 Lencana Warisan Perjuangan",theme:2,desc:"Temukan dampak perjuangan dan cara meneruskannya.",questions:[
+ ["Salah satu warisan penting perjuangan kemerdekaan bagi masyarakat Indonesia adalah ....",["Kesempatan membangun negara dan menentukan masa depan sendiri","Kewajiban mengikuti pemerintahan kolonial","Larangan mempelajari ilmu pengetahuan","Hilangnya seluruh kebudayaan lokal"],0,"Kemerdekaan memberi bangsa Indonesia kesempatan mengatur kehidupan dan membangun negara sendiri."],
+ ["Mengapa pendidikan menjadi salah satu jejak penting perjuangan bangsa?",["Karena pendidikan membantu masyarakat mengembangkan pengetahuan dan kemampuan","Karena pendidikan hanya bermanfaat bagi satu kelompok","Karena pendidikan membuat sejarah tidak diperlukan","Karena pendidikan melarang inovasi"],0,"Pendidikan membuka kesempatan belajar dan berkontribusi bagi masyarakat."],
+ ["Bagaimana cara menghargai jasa pahlawan di sekolah?",["Merusak fasilitas sekolah","Tidak mau belajar","Belajar dengan tekun, menjaga persatuan, dan bertanggung jawab","Mengejek teman yang berbeda pendapat"],2,"Mengisi kemerdekaan dapat dilakukan melalui tindakan positif sehari-hari."],
+ ["Jika masyarakat menjaga monumen dan peninggalan sejarah, tindakan tersebut menunjukkan ....",["Ketidakpedulian terhadap masa lalu","Upaya melestarikan warisan sejarah","Keinginan menghapus identitas daerah","Penolakan terhadap pendidikan"],1,"Pelestarian membantu generasi berikutnya mempelajari sejarah."],
+ ["Bagaimana semangat persatuan para pahlawan dapat diterapkan di kelas?",["Membentuk kelompok yang saling bermusuhan","Bekerja sama dan menghargai perbedaan","Menolak siswa baru","Mengutamakan kepentingan sendiri setiap saat"],1,"Persatuan dapat diwujudkan melalui kerja sama dan sikap saling menghormati."],
+ ["Perjuangan para pahlawan berpengaruh terhadap perkembangan daerah karena ....",["Membantu membuka jalan bagi kehidupan masyarakat yang lebih merdeka dan kesempatan membangun daerah","Membuat semua masalah daerah langsung hilang","Menghapus kebutuhan pendidikan","Menghentikan seluruh kegiatan ekonomi"],0,"Perjuangan kemerdekaan merupakan dasar penting bagi pembangunan, meskipun kemajuan daerah juga dipengaruhi banyak faktor lain."],
+ ["Jika menemukan sampah berserakan di sekitar monumen pahlawan, tindakan terbaik adalah ....",["Membiarkannya","Menambah sampah","Menjaga kebersihan dan mengajak orang lain merawat tempat tersebut","Merusak papan informasi"],2,"Menghargai peninggalan sejarah diwujudkan melalui tindakan nyata."],
+ ["Seorang siswa membantu teman yang kesulitan belajar tanpa mengejeknya. Perilaku ini mencerminkan ....",["Kepedulian dan semangat saling membantu","Sikap mementingkan diri sendiri","Ketidakpedulian","Keinginan merendahkan orang lain"],0,"Kepedulian dan gotong royong merupakan nilai positif yang dapat diterapkan dalam kehidupan sekarang."],
+ ["Mengapa penting mempelajari dampak perjuangan pahlawan terhadap daerah?",["Agar kita dapat memahami hubungan antara sejarah dan kehidupan masyarakat saat ini","Agar kita mengabaikan masalah daerah","Agar kita hanya menghafal nama tokoh","Agar kita tidak perlu menjaga lingkungan"],0,"Pembelajaran sejarah menjadi lebih bermakna ketika kita memahami pengaruhnya terhadap kehidupan sekarang."],
+ ["Manakah tindakan yang paling tepat untuk melanjutkan semangat perjuangan pahlawan pada masa kini?",["Memaksakan kehendak kepada teman","Menyebarkan berita tanpa memeriksa kebenarannya","Belajar sungguh-sungguh, menjaga persatuan, peduli kepada sesama, dan berkontribusi untuk masyarakat","Mengabaikan tanggung jawab"],2,"Generasi penerus dapat melanjutkan semangat perjuangan melalui pendidikan, persatuan, kejujuran, dan kepedulian sosial."]
+ ]}
+];
+// Dunia tambahan: gua bawah tanah, gorong-gorong kota, dan samudra.
+levels.push(
+ {title:"Rahasia Gua Bawah Tanah",short:"Misi Gua Rahasia",emoji:"🪨",badge:"🏅 Lencana Penjelajah Gua",theme:3,desc:"Jelajahi lorong batu, temukan arsip tersembunyi, dan pecahkan teka-teki sejarah.",questions:[
+ ["Mengapa sumber sejarah perlu diperiksa sebelum dipercaya?",["Agar cerita sesuai keinginan kita","Agar informasi dapat dipertanggungjawabkan","Agar semua cerita dianggap benar","Agar tidak perlu mencari bukti"],1,"Sumber yang dapat diperiksa membantu kita membedakan fakta dan cerita yang belum terbukti."],
+ ["Benda peninggalan masa lalu yang ditemukan di suatu tempat sebaiknya ....",["Langsung dibawa pulang","Dibersihkan dengan bahan kimia keras","Dilaporkan kepada guru atau pihak yang berwenang","Dijual kepada siapa saja"],2,"Peninggalan sejarah perlu dijaga dan ditangani dengan hati-hati."],
+ ["Apa yang dimaksud dengan sumber sejarah tertulis?",["Dokumen, surat, atau catatan dari masa lalu","Tebakan tanpa bukti","Permainan tradisional saja","Cerita yang selalu berubah"],0,"Sumber tertulis dapat berupa surat, arsip, prasasti, koran, dan catatan."],
+ ["Sikap penjelajah yang baik ketika menemukan informasi berbeda adalah ....",["Memilih yang paling seru saja","Membandingkan bukti dari beberapa sumber","Menghapus semua informasi","Menyalahkan orang lain"],1,"Membandingkan sumber membantu peneliti menilai ketepatan informasi."],
+ ["Mengapa peninggalan sejarah harus dilestarikan?",["Supaya generasi mendatang dapat mempelajarinya","Supaya cepat rusak","Supaya tidak ada yang tahu sejarah","Agar bisa dicoret-coret"],0,"Pelestarian menjaga bukti sejarah untuk pembelajaran bersama."],
+ ["Ketika bekerja dalam kelompok, keputusan terbaik dibuat dengan ....",["Memaksa anggota lain","Mendengarkan pendapat dan memeriksa alasan","Mengabaikan bukti","Membiarkan satu orang melakukan semuanya"],1,"Diskusi yang baik menghargai pendapat dan menggunakan alasan yang jelas."],
+ ["Jika menemukan tulisan lama yang sulit dibaca, kita sebaiknya ....",["Menebak lalu menyebarkannya sebagai fakta","Meminta bantuan ahli atau guru dan mencari pembanding","Merusaknya agar mudah dibaca","Mengabaikannya selamanya"],1,"Dokumen lama perlu ditafsirkan dengan hati-hati dan bantuan yang sesuai."],
+ ["Nilai kepahlawanan yang paling dibutuhkan saat menghadapi teka-teki sulit adalah ....",["Mudah menyerah","Pantang menyerah dan mau bekerja sama","Mengejek teman","Bertindak tanpa berpikir"],1,"Ketekunan dan kerja sama membantu kelompok menghadapi kesulitan."],
+ ["Museum bermanfaat karena ....",["Menyimpan dan menyajikan koleksi untuk dipelajari masyarakat","Menghilangkan semua bukti sejarah","Hanya untuk tempat bermain bola","Membuat sejarah tidak penting"],0,"Museum membantu masyarakat belajar melalui koleksi dan penjelasan."],
+ ["Apa yang perlu dilakukan jika dua sumber sejarah memberi keterangan berbeda?",["Langsung percaya sumber pertama","Membandingkan asal, bukti, dan konteks kedua sumber","Menyebarkan keduanya tanpa penjelasan","Mengubah tanggal sesuka hati"],1,"Perbedaan sumber perlu diteliti, bukan diselesaikan dengan tebakan."]]},
+ {title:"Misi Gorong-Gorong Kota",short:"Misi Kota Tersembunyi",emoji:"🚇",badge:"🏅 Lencana Penjaga Kota",theme:4,desc:"Susuri saluran bawah kota, hindari rintangan, dan selamatkan arsip perjuangan.",questions:[
+ ["Apa hubungan gotong royong dengan semangat perjuangan?",["Membuat orang bekerja sendiri-sendiri","Membantu orang bekerja bersama mencapai tujuan","Membuat kelompok saling bersaing tidak sehat","Menghindari tanggung jawab"],1,"Gotong royong memperkuat kerja sama dan kepedulian terhadap tujuan bersama."],
+ ["Ketika teman satu tim melakukan kesalahan, tindakan terbaik adalah ....",["Mengejeknya","Menyalahkannya di depan semua orang","Membantu memperbaiki dan belajar dari kesalahan","Mengeluarkannya dari kelompok"],2,"Kelompok yang baik saling mendukung dan belajar dari kesalahan."],
+ ["Mengapa aturan diperlukan dalam kehidupan bersama?",["Agar orang tertentu selalu menang","Agar kehidupan lebih tertib, aman, dan adil","Agar semua orang takut bertanya","Agar tidak ada kerja sama"],1,"Aturan yang adil membantu menjaga ketertiban dan melindungi hak bersama."],
+ ["Contoh sikap bertanggung jawab di sekolah adalah ....",["Menyelesaikan tugas dan menjaga fasilitas bersama","Menyuruh teman mengerjakan semua tugas","Membuang sampah sembarangan","Menghindari tugas piket"],0,"Tanggung jawab terlihat dari menyelesaikan kewajiban dan merawat fasilitas."],
+ ["Jika melihat informasi sejarah yang meragukan di internet, kita harus ....",["Langsung membagikannya","Memeriksa sumber dan membandingkan dengan rujukan tepercaya","Mengubah isinya","Menganggap semua unggahan pasti benar"],1,"Informasi perlu diverifikasi sebelum dipercaya atau dibagikan."],
+ ["Sikap adil dalam kelompok berarti ....",["Memberi kesempatan berpendapat dan membagi tugas dengan wajar","Memilih teman dekat saja","Mengambil semua hadiah","Membungkam pendapat berbeda"],0,"Keadilan memberi kesempatan dan tanggung jawab secara wajar."],
+ ["Jika tugas kelompok terasa sulit, langkah yang paling tepat adalah ....",["Membagi tugas sesuai kemampuan dan saling membantu","Berhenti mencoba","Menyembunyikan masalah","Membiarkan satu siswa bekerja"],0,"Pembagian tugas dan dukungan membuat kerja kelompok lebih efektif."],
+ ["Apa yang dapat kita lakukan untuk menjaga lingkungan sekolah?",["Membuang sampah ke saluran air","Menjaga kebersihan dan menggunakan fasilitas dengan benar","Merusak tanaman","Membiarkan keran terbuka"],1,"Lingkungan bersih membutuhkan tindakan nyata dan kebiasaan bertanggung jawab."],
+ ["Mengapa suara semua anggota kelompok perlu didengar?",["Supaya diskusi lebih kaya dan keputusan dipahami bersama","Supaya diskusi semakin lama tanpa tujuan","Agar tidak ada keputusan","Supaya ketua selalu salah"],0,"Mendengarkan anggota membantu kelompok mengambil keputusan yang lebih baik."],
+ ["Nilai perjuangan yang bisa diterapkan saat menyelesaikan misi bersama adalah ....",["Persatuan, disiplin, dan pantang menyerah","Egois dan saling mengejek","Curang demi menang","Menghindari semua tugas"],0,"Nilai perjuangan dapat diterapkan dalam tindakan sehari-hari."]]},
+ {title:"Ekspedisi Samudra Nusantara",short:"Misi Samudra",emoji:"🌊",badge:"🏅 Lencana Penjelajah Samudra",theme:5,desc:"Selami dunia bawah laut, temukan jalur pelayaran, dan kumpulkan warisan Nusantara.",questions:[
+ ["Mengapa laut penting dalam sejarah kepulauan Indonesia?",["Laut selalu memisahkan semua masyarakat","Laut menjadi jalur pelayaran, perdagangan, dan hubungan antardaerah","Laut membuat orang tidak dapat berpindah","Laut tidak berpengaruh pada kehidupan"],1,"Laut menghubungkan pulau-pulau melalui pelayaran, perdagangan, dan pertukaran budaya."],
+ ["Kegiatan perdagangan antarpulau dapat mendorong ....",["Pertukaran barang dan budaya","Hilangnya semua hubungan","Larangan bepergian","Berhentinya kegiatan ekonomi"],0,"Perdagangan memungkinkan barang, gagasan, dan budaya berpindah antardaerah."],
+ ["Salah satu sikap untuk menjaga warisan budaya Nusantara adalah ....",["Merendahkan budaya daerah lain","Mempelajari dan menghargai keberagaman budaya","Melarang semua bahasa daerah","Merusak benda budaya"],1,"Keberagaman budaya adalah bagian dari kekayaan bangsa yang perlu dihargai."],
+ ["Mengapa peta membantu penjelajah memahami jalur perjalanan?",["Peta menunjukkan letak dan hubungan antarwilayah","Peta menggantikan semua bukti sejarah","Peta selalu memuat cerita lengkap","Peta tidak membutuhkan simbol"],0,"Peta membantu memahami lokasi, arah, dan hubungan antarwilayah."],
+ ["Apa manfaat kerja sama saat menghadapi tantangan di laut?",["Meningkatkan keselamatan dan membantu mencapai tujuan bersama","Membuat semua orang bertindak sendiri","Menghilangkan komunikasi","Membuat tugas tidak jelas"],0,"Komunikasi dan kerja sama sangat penting dalam menghadapi tantangan bersama."],
+ ["Sikap yang tepat saat bertemu teman dengan budaya berbeda adalah ....",["Mengejek kebiasaannya","Menghormati dan mau belajar tentang perbedaannya","Memaksa teman mengikuti kebiasaan kita","Menolak bekerja sama"],1,"Menghormati perbedaan memperkuat persatuan."],
+ ["Jika kelompok menemukan sampah di pantai saat ekspedisi, sebaiknya ....",["Meninggalkannya begitu saja","Menambah sampah","Mengumpulkan dengan aman dan membuang pada tempatnya","Mendorongnya ke laut"],2,"Menjaga lingkungan adalah tanggung jawab bersama."],
+ ["Apa yang dimaksud dengan warisan perjuangan?",["Nilai, kesempatan, dan perubahan yang ditinggalkan perjuangan generasi sebelumnya","Barang yang selalu boleh dijual","Cerita tanpa makna","Hal yang hanya ada di museum"],0,"Warisan perjuangan dapat berupa kemerdekaan, nilai, dan kesempatan membangun bangsa."],
+ ["Ketika pendapat anggota tim berbeda, kelompok sebaiknya ....",["Berdiskusi dengan sopan dan mencari alasan terbaik","Bertengkar sampai ada yang menyerah","Mengabaikan semua pendapat","Membatalkan misi"],0,"Perbedaan pendapat dapat diselesaikan melalui diskusi dan saling menghormati."],
+ ["Cara terbaik meneruskan semangat pahlawan di masa kini adalah ....",["Belajar, menjaga persatuan, jujur, dan peduli kepada masyarakat","Mementingkan diri sendiri","Menyebarkan kabar bohong","Mengabaikan tanggung jawab"],0,"Semangat perjuangan diteruskan melalui tindakan baik dalam kehidupan sehari-hari."]]}
+);
+const $=id=>document.getElementById(id);
+const state={name:"Penjelajah",score:0,coins:0,correct:0,level:0,answered:levels.map(()=>[]),completed:levels.map(()=>false),sound:true,questionOpen:false,questionIndex:null,firstTry:false,finalBonus:false,toastTimer:null,groupMode:false,teams:[],teamScores:[],activeTeam:0};
+const canvas=$("world"),ctx=canvas.getContext("2d");
+let player={x:60,y:330,w:34,h:45,vx:0,vy:0,onGround:false},keys={},camera=0,frame=0,nearChest=-1,gameActive=false,toastTimer=null,audioCtx=null;
+const groundY=385,worldWidth=1500;
+const chests=[{x:250,y:340},{x:510,y:340},{x:770,y:340},{x:1030,y:340},{x:1280,y:340}];
+const badgeEmojis=["📜","🛡️","🌱"];
+function showOnly(id){["home","map","game","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id));}
+function updateStats(){$("scorePill").textContent="⭐ Skor: "+state.score.toLocaleString("id-ID");$("coinPill").textContent="🪙 Koin: "+state.coins;$("badgeCount").textContent="🏅 "+state.completed.filter(Boolean).length+"/"+levels.length;updateTeamHud();}
+function updateTeamHud(){const hud=$("teamHud");if(!hud)return;hud.classList.toggle("hidden",!state.groupMode);if(state.groupMode&&state.teams.length){$("activeTeamTag").textContent="🤝 Giliran: "+state.teams[state.activeTeam];$("teamScoreTag").textContent="🏆 "+state.teams.map((n,i)=>n+": "+(state.teamScores[i]||0)).join("  •  ");}}
+function notify(msg){const t=$("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add("hidden"),2200);}
+function beep(freq=660,dur=.12,type="sine"){if(!state.sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);}catch(e){}}
+function renderMap(){const box=$("levelCards");box.innerHTML="";levels.forEach((l,i)=>{const unlocked=i===0||state.completed[i-1],done=state.completed[i];const d=document.createElement("div");d.className="levelcard"+(!unlocked?" locked":"")+(done?" done":"");d.innerHTML=`<div class="emoji">${l.emoji}</div><h3>Level ${i+1}: ${l.title}</h3><p>${l.desc}</p><div><b>${done?"✅ Selesai":unlocked?"🔓 Terbuka":"🔒 Terkunci"}</b></div><button ${unlocked?"":"disabled"}>${done?"Mainkan Lagi":"Mulai Level"}</button>`;d.querySelector("button").addEventListener("click",()=>startLevel(i));box.appendChild(d);});updateStats();}
+function startLevel(i){if(i>0&&!state.completed[i-1])return;state.level=i;player={x:60,y:320,w:34,h:45,vx:0,vy:0,onGround:false};camera=0;gameActive=true;showOnly("game");$("levelTitle").textContent=`Level ${i+1} — ${levels[i].title}`;$("levelSub").textContent=levels[i].desc;$("missionNote").textContent="Jelajahi dunia ini, lewati rintangan, dan temukan peti pengetahuan!";$("factText").textContent="Jawaban benar pertama kali mendapat 100 poin dan 10 koin.";renderProgress();draw();beep(500,.12);}
+function renderProgress(){const done=state.answered[state.level].filter(Boolean).length;$("questionProgress").textContent=`📚 Tantangan ${done}/10`;$("progressBar").style.width=(done*10)+"%";updateStats();}
+function chestLocations(){return Array.from({length:10},(_,i)=>({x:130+i*132,y:340}));}
+function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}}
+function drawHero(x,y){
+ // Original cartoon explorer sprite, animated by frame count (no emoji character)
+ const run=Math.abs(player.vx)>.1&&!player.onGround?1:Math.abs(player.vx)>.1?Math.sin(frame*.42):0;
+ ctx.save();ctx.translate(x+player.w/2,y+player.h/2);if(player.vx<0)ctx.scale(-1,1);
+ // shadow
+ ctx.fillStyle="#16334a35";ctx.beginPath();ctx.ellipse(0,player.h/2+2,19,5,0,0,Math.PI*2);ctx.fill();
+ // legs with running swing
+ const swing=player.onGround?Math.sin(frame*.48)*7:2;
+ ctx.strokeStyle="#17324d";ctx.lineWidth=7;ctx.lineCap="round";
+ ctx.beginPath();ctx.moveTo(-5,8);ctx.lineTo(-8+swing,19);ctx.stroke();ctx.beginPath();ctx.moveTo(5,8);ctx.lineTo(8-swing,19);ctx.stroke();
+ // shoes
+ roundRect(ctx,-16+swing,15,13,7,3,"#6b3e2e");roundRect(ctx,3-swing,15,13,7,3,"#6b3e2e");
+ // body and scarf
+ roundRect(ctx,-12,-10,24,24,7,"#1677c8","#10518a");ctx.fillStyle="#ffcc45";ctx.beginPath();ctx.moveTo(-8,-6);ctx.lineTo(7,-5);ctx.lineTo(2,5);ctx.lineTo(-3,2);ctx.fill();
+ // backpack
+ roundRect(ctx,-17,-7,7,15,3,"#e07a28");
+ // arms
+ ctx.strokeStyle="#f3b887";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(-9,-4);ctx.lineTo(-15+run*3,4);ctx.stroke();ctx.beginPath();ctx.moveTo(9,-4);ctx.lineTo(15-run*3,1);ctx.stroke();
+ // head
+ ctx.fillStyle="#f3c49a";ctx.beginPath();ctx.arc(0,-17,11,0,Math.PI*2);ctx.fill();
+ // hair + explorer cap
+ ctx.fillStyle="#4b2f26";ctx.beginPath();ctx.arc(-1,-21,10,Math.PI,Math.PI*2);ctx.fill();ctx.fillStyle="#ffbd38";ctx.beginPath();ctx.ellipse(0,-25,12,4,0,0,Math.PI*2);ctx.fill();roundRect(ctx,-7,-31,14,6,3,"#e84f4f");
+ // face
+ ctx.fillStyle="#25364a";ctx.beginPath();ctx.arc(4,-17,1.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#9a4b38";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(3,-14,3,.2,1.8);ctx.stroke();
+ ctx.restore();
+}
+function draw(){if(!$('game').classList.contains('hidden')){
+ const W=canvas.width,H=canvas.height;ctx.clearRect(0,0,W,H);const theme=levels[state.level].theme;
+ // sky gradient + warm sun
+ const sky=ctx.createLinearGradient(0,0,0,H);const skyTop=['#55c8ff','#ff9d79','#7dd3fc','#211d4d','#24485b','#0477b9'][theme]||'#55c8ff';const skyMid=['#dff9ff','#ffe6b8','#d6f7d6','#654b72','#6f9aa0','#52c7db'][theme]||'#dff9ff';const skyLow=['#fef3c7','#fef3c7','#d6f7d6','#b08a73','#b8c5b6','#b5f2e8'][theme]||'#fef3c7';sky.addColorStop(0,skyTop);sky.addColorStop(.72,skyMid);sky.addColorStop(1,skyLow);ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ if(theme>=3){ctx.fillStyle=theme===3?'#1a173a55':theme===4?'#153b4a55':'#007eaa33';ctx.fillRect(0,0,W,H);for(let i=0;i<28;i++){let bx=((i*73+frame*(theme===5?-.22:.08))%W+W)%W,by=(i*47+frame*(theme===5?-.65:-.18))%(H-20);ctx.fillStyle=theme===5?'#e4ffff99':'#d9f5ff66';ctx.beginPath();ctx.arc(bx,by,2+(i%4),0,Math.PI*2);ctx.fill();}}
+ if(theme<3){ctx.fillStyle='#fff2a8';ctx.beginPath();ctx.arc(790,65,31,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffffff55';ctx.beginPath();ctx.arc(780,56,39,0,Math.PI*2);ctx.fill();}
+ // layered parallax clouds on outdoor worlds
+ if(theme<3) for(let i=0;i<6;i++){let x=((i*190-camera*.18+frame*.18)%1150+1150)%1150-100,y=55+(i%3)*36;ctx.fillStyle='#ffffffd9';ctx.beginPath();ctx.ellipse(x,y,26,13,0,0,Math.PI*2);ctx.ellipse(x+21,y-8,24,18,0,0,Math.PI*2);ctx.ellipse(x+44,y,28,13,0,0,Math.PI*2);ctx.fill();}
+ // Distinct scenery for cavern, sewer and ocean worlds
+ if(theme===3){ctx.fillStyle='#17152f';ctx.beginPath();ctx.moveTo(0,0);for(let x=0;x<=W;x+=45)ctx.lineTo(x,28+Math.sin(x/40)*17);ctx.lineTo(W,0);ctx.closePath();ctx.fill();for(let i=0;i<9;i++){let x=((i*117-camera*.15)%W+W)%W;ctx.fillStyle=i%2?'#8272a7':'#b2a0c9';ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+14,42+(i%3)*15);ctx.lineTo(x+29,0);ctx.fill();ctx.fillStyle='#ffeaa0';ctx.beginPath();ctx.arc(x+20,80+(i%4)*22,3,0,Math.PI*2);ctx.fill();}}
+ if(theme===4){ctx.fillStyle='#193d49';ctx.fillRect(0,0,W,95);ctx.fillStyle='#34717b';ctx.fillRect(0,88,W,9);for(let i=0;i<7;i++){let x=((i*145-camera*.25)%W+W)%W;roundRect(ctx,x,34,66,19,8,'#647e82','#183d49');ctx.fillStyle='#a5c6c7';ctx.beginPath();ctx.arc(x+18,43,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+48,43,4,0,Math.PI*2);ctx.fill();}for(let i=0;i<5;i++){let x=((i*210-camera*.3)%W+W)%W;ctx.fillStyle='#28717a';ctx.fillRect(x,125,18,155);ctx.fillStyle='#61b3b4';ctx.fillRect(x+5,140,5,115);}}
+ if(theme===5){for(let i=0;i<8;i++){let x=((i*139-camera*.22)%W+W)%W;ctx.fillStyle=['#ff8c69','#f8bd72','#f06e91','#8cdbd5'][i%4];ctx.beginPath();ctx.moveTo(x,groundY);ctx.quadraticCurveTo(x-10,groundY-35,x+5,groundY-57);ctx.quadraticCurveTo(x+24,groundY-27,x+18,groundY);ctx.fill();for(let k=0;k<3;k++){ctx.beginPath();ctx.arc(x+4+k*4,groundY-20-k*9,5,0,Math.PI*2);ctx.fill();}}for(let i=0;i<4;i++){let fx=((i*231-camera*.17)%W+W)%W,fy=150+i%3*44;ctx.fillStyle='#e6fbff';ctx.beginPath();ctx.ellipse(fx,fy,18,7,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(fx-5,fy);ctx.lineTo(fx-18,fy-10);ctx.lineTo(fx-18,fy+10);ctx.fill();ctx.fillStyle='#164d70';ctx.beginPath();ctx.arc(fx+8,fy-1,2,0,Math.PI*2);ctx.fill();}}
+ // mountains in distance on outdoor worlds
+ if(theme<3){ctx.fillStyle=theme===1?'#d08b75':theme===2?'#7fc8a9':'#8ed6a1';ctx.beginPath();ctx.moveTo(0,285);for(let x=0;x<=W;x+=35)ctx.lineTo(x,210+Math.sin((x+camera*.12)/85)*25);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+ ctx.fillStyle=theme===1?'#b87564':theme===2?'#51a78b':'#5dbb78';ctx.beginPath();ctx.moveTo(0,325);for(let x=0;x<=W;x+=45)ctx.lineTo(x,275+Math.sin((x+camera*.28)/75)*20);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();}
+ // parallax trees, houses and historic silhouettes on outdoor levels
+ if(theme<3) for(let i=0;i<12;i++){let x=((i*155-camera*.48)%1900+1900)%1900-90;let trunk=theme===1?'#76513b':'#80583e';ctx.fillStyle=trunk;ctx.fillRect(x+20,255,13,75);ctx.fillStyle=theme===2?'#278b63':theme===1?'#50794a':'#278f54';ctx.beginPath();ctx.arc(x+26,245,27,0,Math.PI*2);ctx.arc(x+9,258,18,0,Math.PI*2);ctx.arc(x+43,260,19,0,Math.PI*2);ctx.fill();
+ if(i%3===1){ctx.fillStyle=theme===1?'#b85c48':'#e9a44b';ctx.fillRect(x+70,268,49,55);ctx.fillStyle='#76452e';ctx.beginPath();ctx.moveTo(x+63,269);ctx.lineTo(x+94,241);ctx.lineTo(x+126,269);ctx.fill();ctx.fillStyle='#ffe6b8';ctx.fillRect(x+88,286,12,19);}}
+ // ground with rich top grass and scrolling texture
+ ctx.fillStyle=['#7b512e','#8c5739','#3c9d69','#49365f','#35535a','#175d75'][theme]||'#7b512e';ctx.fillRect(0,groundY,W,H-groundY);ctx.fillStyle=['#a7ed67','#e4a36b','#7ce18b','#8c7ca8','#70a6a5','#55d9e6'][theme]||'#a7ed67';ctx.fillRect(0,groundY,W,13);if(theme<3){ctx.fillStyle='#fff6c2';for(let i=0;i<38;i++){let x=((i*31-camera)%W+W)%W;ctx.fillRect(x,groundY+3,10,3);}ctx.fillStyle='#553d2a';for(let i=0;i<22;i++){let x=((i*49-camera*1.2)%W+W)%W;ctx.fillRect(x,groundY+28+(i%3)*12,15,4);}}else{ctx.strokeStyle=theme===5?'#5de1e8':'#71818f';ctx.lineWidth=2;for(let i=0;i<16;i++){let x=((i*61-camera*.7)%W+W)%W;ctx.beginPath();ctx.moveTo(x,groundY+20);ctx.lineTo(x+13,groundY+28+(i%4)*8);ctx.stroke();}}
+ // floating platforms, golden trim
+ for(let i=0;i<5;i++){let wx=205+i*260,sx=wx-camera,py=270-(i%2)*35;if(sx>-100&&sx<W+100){roundRect(ctx,sx,py,86,16,5,'#b86a38','#75442b');roundRect(ctx,sx,py-4,86,9,4,'#ffd166','#f6a93b');for(let k=0;k<4;k++){ctx.fillStyle='#8d4e2c';ctx.fillRect(sx+10+k*19,py+5,8,7);}}}
+ // decorative obstacles (logs / rocks) between learning chests
+ const obstacles=[{x:315,t:0},{x:575,t:1},{x:835,t:0},{x:1095,t:1},{x:1355,t:0}];
+ obstacles.forEach((o,i)=>{let sx=o.x-camera;if(sx<-70||sx>W+70)return;if(o.t===0){roundRect(ctx,sx-17,groundY-24,35,26,8,'#a86b3d','#75452b');ctx.fillStyle='#d49a63';ctx.beginPath();ctx.ellipse(sx,groundY-24,17,6,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#75452b';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(sx,groundY-24,8,3,0,0,Math.PI*2);ctx.stroke();}else{ctx.fillStyle='#7b8794';ctx.beginPath();ctx.moveTo(sx-22,groundY);ctx.lineTo(sx-13,groundY-25);ctx.lineTo(sx+5,groundY-31);ctx.lineTo(sx+23,groundY-12);ctx.lineTo(sx+20,groundY);ctx.closePath();ctx.fill();ctx.fillStyle='#b8c4ce';ctx.beginPath();ctx.moveTo(sx-9,groundY-23);ctx.lineTo(sx+5,groundY-29);ctx.lineTo(sx+10,groundY-17);ctx.fill();}});
+ // question chests as game objects
+ const ch=chestLocations();nearChest=-1;
+ ch.forEach((c,i)=>{const sx=c.x-camera;if(sx>-55&&sx<W+55){const done=state.answered[state.level][i];ctx.fillStyle='#00000025';ctx.beginPath();ctx.ellipse(sx,c.y+28,23,6,0,0,Math.PI*2);ctx.fill();roundRect(ctx,sx-19,c.y-3,38,28,5,done?'#7b9c8c':'#b9652c','#633a24');roundRect(ctx,sx-20,c.y-8,40,13,5,done?'#9ac7b0':'#f2a93b','#633a24');ctx.fillStyle='#ffe38a';ctx.fillRect(sx-3,c.y-1,6,14);ctx.fillStyle=done?'#d6f6df':'#ffdb70';ctx.beginPath();ctx.arc(sx,c.y-13,6,0,Math.PI*2);ctx.fill();ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillStyle='#17324d';ctx.fillText(done?'✓':String(i+1),sx,c.y+39);}
+ if(Math.abs((player.x+player.w/2)-c.x)<54&&Math.abs((player.y+player.h)-groundY)<62&&!state.answered[state.level][i])nearChest=i;});
+ // running hero and nameplate
+ const px=player.x-camera;drawHero(px,player.y);
+ // Render penjelajah lain yang tersinkron dari Firebase
+ if(window.onlinePlayers){Object.values(window.onlinePlayers).forEach(rp=>{if(!rp||rp.uid===window.onlineUid||typeof rp.x!=="number")return;const rx=rp.x-camera;if(rx<-60||rx>W+60)return;ctx.save();ctx.globalAlpha=.92;drawHero(rx,rp.y||groundY-45);roundRect(ctx,Math.max(4,Math.min(W-132,rx-48)),Math.max(7,(rp.y||groundY-45)-29),96,21,8,'#087e8bde');ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(String(rp.name||'Penjelajah').slice(0,14),Math.max(52,Math.min(W-52,rx)),Math.max(21,(rp.y||groundY-45)-15));ctx.restore();});}
+ roundRect(ctx,Math.max(5,Math.min(W-140,px-48)),Math.max(7,player.y-29),96,21,8,'#15334bdc');ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(state.name.slice(0,14),Math.max(53,Math.min(W-53,px)),Math.max(21,player.y-15));
+ if(nearChest>=0){let bx=Math.max(8,Math.min(W-205,px-70));roundRect(ctx,bx,18,197,31,9,'#17324d');ctx.fillStyle='#fff';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText('TEKAN E • BUKA PETI',bx+98,38);}
+ // Cinematic vignette and world label
+ const vign=ctx.createRadialGradient(W/2,H/2,120,W/2,H/2,560);vign.addColorStop(0,'#00000000');vign.addColorStop(1,theme>=3?'#071b2b55':'#17324d20');ctx.fillStyle=vign;ctx.fillRect(0,0,W,H);
+ roundRect(ctx,W-248,12,236,31,10,'#12334bd9');ctx.textAlign='center';ctx.font='bold 12px system-ui';ctx.fillStyle='#fff';ctx.fillText(levels[state.level].emoji+' '+levels[state.level].title.slice(0,24),W-130,32);
+ // HUD overlay
+ roundRect(ctx,12,12,142,31,10,'#12334bd9');ctx.textAlign='left';ctx.font='bold 14px system-ui';ctx.fillStyle='#ffe17a';ctx.fillText('★ '+state.score,23,32);ctx.fillStyle='#fff';ctx.fillText('● '+state.coins,82,32);
+ // motion sparkles while running
+ if(Math.abs(player.vx)>.1&&player.onGround&&frame%5<3){ctx.fillStyle='#fff6b4';ctx.beginPath();ctx.arc(px+(player.vx>0?-14:player.w+14),player.y+player.h-4,3+(frame%3),0,Math.PI*2);ctx.fill();}
+ }}
+function loop(){if(gameActive&&$('game')&&!$('game').classList.contains('hidden')&&!state.questionOpen){frame++;const speed=4.6;player.vx=0;if(keys.ArrowLeft||keys.a||keys.A)player.vx=-speed;if(keys.ArrowRight||keys.d||keys.D)player.vx=speed;const oldX=player.x;player.x=Math.max(20,Math.min(worldWidth-player.w,player.x+player.vx));
+ const hitObstacle=[315,575,835,1095,1355].some(ox=>Math.abs((player.x+player.w/2)-ox)<31 && player.y+player.h>groundY-28);
+ if(hitObstacle){player.x=oldX;player.vx=0;if(frame%35===0)notify("Rintangan di depan! Tekan lompat untuk melewatinya.");}
+ player.vy+=.62;player.y+=player.vy;if(player.y+player.h>=groundY){player.y=groundY-player.h;player.vy=0;player.onGround=true;}else player.onGround=false;camera=Math.max(0,Math.min(worldWidth-900,player.x-320));if(window.publishOnlinePosition)window.publishOnlinePosition();draw();if(nearChest>=0&&keys.e){keys.e=false;openQuestion(nearChest);} }requestAnimationFrame(loop);}
+function jump(){if(player.onGround&&!state.questionOpen){player.vy=-12;player.onGround=false;beep(400,.08);}}
+function openQuestion(index){if(state.questionOpen||state.answered[state.level][index])return;state.questionOpen=true;state.questionIndex=index;state.firstTry=true;const q=levels[state.level].questions[index];$("modalLevel").textContent=`Level ${state.level+1} • Soal ${index+1}/10`;$("modalTitle").textContent=state.groupMode&&state.teams.length?"📦 Giliran "+state.teams[state.activeTeam]:"📦 Peti Pengetahuan";$("questionText").textContent=q[0];$("feedback").className="feedback hidden";$("feedback").textContent="";$("retryBtn").classList.add("hidden");$("continueBtn").classList.add("hidden");const area=$("answerArea");area.innerHTML="";q[1].forEach((answer,j)=>{const b=document.createElement("button");b.textContent=String.fromCharCode(65+j)+". "+answer;b.addEventListener("click",()=>answerQuestion(j,b));area.appendChild(b);});$("modalBack").classList.remove("hidden");}
+function answerQuestion(choice,button){const idx=state.questionIndex,q=levels[state.level].questions[idx],buttons=[...$("answerArea").querySelectorAll("button")];buttons.forEach(b=>b.disabled=true);const fb=$("feedback");fb.classList.remove("hidden");if(choice===q[2]){button.classList.add("correct");fb.className="feedback good";fb.innerHTML="<b>🌟 Hebat! Jawabanmu benar!</b><br>"+q[3];if(state.firstTry){state.score+=100;state.coins+=10;state.correct++;if(state.groupMode&&state.teams.length){state.teamScores[state.activeTeam]+=100;}beep(820,.18);notify(state.groupMode&&state.teams.length?"+100 poin untuk "+state.teams[state.activeTeam]+"!":"+100 poin • +10 koin!");}state.answered[state.level][idx]=true;renderProgress();$("continueBtn").classList.remove("hidden");$("retryBtn").classList.add("hidden");}else{button.classList.add("wrong");buttons[q[2]].classList.add("correct");fb.className="feedback bad";fb.innerHTML="<b>Belum tepat. Yuk, pelajari petunjuknya!</b><br><b>Jawaban yang benar: "+String.fromCharCode(65+q[2])+". "+q[1][q[2]]+"</b><br>"+q[3];state.firstTry=false;beep(260,.16,"triangle");$("retryBtn").classList.remove("hidden");$("continueBtn").classList.remove("hidden");}updateStats();if(window.saveOnlineProgress)window.saveOnlineProgress();}
+function closeQuestion(){state.questionOpen=false;$("modalBack").classList.add("hidden");if(state.groupMode&&state.teams.length&&state.answered[state.level][state.questionIndex]){state.activeTeam=(state.activeTeam+1)%state.teams.length;updateTeamHud();}const done=state.answered[state.level].filter(Boolean).length;if(done>=levels[state.level].questions.length){finishLevel();}else{const next=chestLocations().findIndex((c,i)=>!state.answered[state.level][i]);$("missionNote").textContent=done===10?"Semua tantangan selesai!":`Tantangan selesai: ${done}/10. Cari peti yang belum dibuka.`;if(next>=0)player.x=Math.max(30,chestLocations()[next].x-30);renderProgress();draw();}}
+function finishLevel(){gameActive=false;state.completed[state.level]=true;state.score+=200;beep(950,.3);updateStats();$("modalBack").classList.remove("hidden");$("modalLevel").textContent="Misi selesai";$("modalTitle").textContent="🎉 "+levels[state.level].short+" Selesai!";$("questionText").textContent="Kamu berhasil menjawab semua "+levels[state.level].questions.length+" tantangan dan mendapatkan "+levels[state.level].badge+" Bonus penyelesaian: 200 poin."; $("answerArea").innerHTML=`<div class="badgeitem">${levels[state.level].badge}</div>`;$("feedback").className="feedback good";$("feedback").innerHTML="Hebat! Baca kembali pembahasan soal untuk mengingat materi. Teruskan petualanganmu!";$("retryBtn").classList.add("hidden");$("continueBtn").textContent=state.level<levels.length-1?"Buka Level Berikutnya ➜":"Lihat Hasil Akhir 🏆";$("continueBtn").classList.remove("hidden");$("continueBtn").onclick=()=>{state.questionOpen=false;$("modalBack").classList.add("hidden");$("continueBtn").onclick=closeQuestion;if(state.completed.every(Boolean)){showResults();}else{renderMap();showOnly("map");}};renderMap();if(window.saveOnlineProgress)window.saveOnlineProgress();}
+function showResults(){gameActive=false;if(!state.finalBonus){state.score+=500;state.finalBonus=true;}updateStats();showOnly("result");$("resultIntro").textContent=`Selamat, ${state.name}! Kamu telah menuntaskan petualangan Jejak Sang Pahlawan.`;$("finalScore").textContent="⭐ Skor: "+state.score.toLocaleString("id-ID");$("finalCoins").textContent="🪙 Koin: "+state.coins;$("finalCorrect").textContent="✅ Benar pertama kali: "+state.correct+"/"+levels.reduce((n,l)=>n+l.questions.length,0);const rank=state.score>=4000?"Legenda Jejak Pahlawan":state.score>=3000?"Penjaga Sejarah":state.score>=2000?"Sahabat Pahlawan":state.score>=1000?"Pencari Jejak":"Penjelajah Pemula";$("rankText").textContent=rank+" — teruskan semangat belajar, persatuan, keberanian, dan kepedulian.";const bb=$("resultBadges");bb.innerHTML=levels.map((l,i)=>`<div class="badgeitem">${state.completed[i]?"🏅":"🔒"} ${l.badge.replace("🏅 ","")}</div>`).join("");if(state.groupMode&&state.teams.length){const board=[...state.teams].map((n,i)=>({n,score:state.teamScores[i]||0})).sort((a,b)=>b.score-a.score);$("resultIntro").textContent+= " Peringkat tim: "+board.map((t,i)=>`${i+1}. ${t.n} (${t.score} poin)`).join(" • ");}}
+function resetGame(){state.score=0;state.coins=0;state.correct=0;state.level=0;state.answered=levels.map(()=>[]);state.completed=levels.map(()=>false);state.teamScores=state.teams.map(()=>0);state.activeTeam=0;state.questionOpen=false;state.questionIndex=null;state.finalBonus=false;updateStats();renderMap();showOnly("home");}
+$("soloModeBtn").addEventListener("click",()=>{state.groupMode=false;$("soloModeBtn").classList.add("active");$("teamModeBtn").classList.remove("active");$("teamSetup").classList.add("hidden");});
+$("teamModeBtn").addEventListener("click",()=>{state.groupMode=true;$("teamModeBtn").classList.add("active");$("soloModeBtn").classList.remove("active");$("teamSetup").classList.remove("hidden");});
+$("startBtn").addEventListener("click",()=>{state.name=$("playerName").value.trim()||"Penjelajah";if(state.groupMode){state.teams=$("teamNames").value.split(",").map(x=>x.trim()).filter(Boolean).slice(0,6);if(state.teams.length<2)state.teams=["Tim Garuda","Tim Komodo"];state.teamScores=state.teams.map(()=>0);state.activeTeam=0;}else{state.teams=[];state.teamScores=[];state.activeTeam=0;}updateTeamHud();$("welcomeText").textContent=state.groupMode?`Mode kelompok aktif: ${state.teams.join(", ")}. Bergiliran dan kumpulkan poin!`:`Ayo, ${state.name}! Pilih level yang terbuka.`;renderMap();showOnly("map");beep(550,.12);});
+$("howBtn").addEventListener("click",()=>alert("CARA BERMAIN\n\n1. Mulai petualangan dan pilih Level 1.\n2. Bergerak dengan tombol ← → atau A/D.\n3. Dekati peti 📦, lalu tekan E atau tombol Buka Peti.\n4. Jawab pertanyaan dan baca pembahasannya.\n5. Jawaban benar pertama kali mendapat 100 poin dan 10 koin.\n6. Selesaikan 10 soal untuk mendapat lencana dan membuka level berikutnya.\n7. Di ponsel, gunakan tombol kontrol di bawah arena.\n8. Mode kelompok: masukkan nama 2–6 tim; setiap tim bergiliran menjawab pada perangkat yang sama."));
+$("homeBtn").addEventListener("click",()=>showOnly("home"));$("mapBtn").addEventListener("click",()=>{gameActive=false;renderMap();showOnly("map");});$("resultMapBtn").addEventListener("click",()=>{renderMap();showOnly("map");});$("againBtn").addEventListener("click",resetGame);
+$("soundBtn").addEventListener("click",()=>{state.sound=!state.sound;$("soundBtn").textContent=state.sound?"🔊 Suara: ON":"🔇 Suara: OFF";$("soundBtn").setAttribute("aria-pressed",String(!state.sound));if(state.sound)beep();});
+$("leftBtn").addEventListener("pointerdown",e=>{e.preventDefault();keys.ArrowLeft=true;});["pointerup","pointerleave","pointercancel"].forEach(ev=>$("leftBtn").addEventListener(ev,()=>keys.ArrowLeft=false));
+$("rightBtn").addEventListener("pointerdown",e=>{e.preventDefault();keys.ArrowRight=true;});["pointerup","pointerleave","pointercancel"].forEach(ev=>$("rightBtn").addEventListener(ev,()=>keys.ArrowRight=false));
+$("jumpBtn").addEventListener("pointerdown",e=>{e.preventDefault();jump();});$("interactBtn").addEventListener("click",()=>{if(nearChest>=0)openQuestion(nearChest);else notify("Dekati peti 📦 terlebih dahulu!");});
+$("retryBtn").addEventListener("click",()=>{state.questionOpen=false;$("modalBack").classList.add("hidden");openQuestion(state.questionIndex);});
+$("continueBtn").addEventListener("click",closeQuestion);
+document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key))e.preventDefault();keys[e.key]=true;if(["ArrowUp","w","W"," "].includes(e.key))jump();if(e.key==="e"||e.key==="E"){if(nearChest>=0)openQuestion(nearChest);}if(e.key==="Escape"&&state.questionOpen){}});document.addEventListener("keyup",e=>{keys[e.key]=false;});
+document.querySelectorAll(".reflection").forEach(b=>b.addEventListener("click",()=>{$("reflectionResponse").textContent="Komitmenmu: "+b.dataset.ref;$("reflectionResponse").classList.remove("hidden");}));
+// === MULTIPLAYER ONLINE FIREBASE ===
+// Isi firebaseConfig di bawah dari proyek Firebase KHUSUS game. Jangan masukkan service-account/private key.
+const firebaseConfig = {
+  apiKey: "AIzaSyA7SdLtfLGZU-jh9MFt0_nDsJWc_gktXNk",
+  authDomain: "jejak-pahlawan-mihuri.firebaseapp.com",
+  databaseURL: "https://jejak-pahlawan-mihuri-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "jejak-pahlawan-mihuri",
+  storageBucket: "jejak-pahlawan-mihuri.firebasestorage.app",
+  messagingSenderId: "503390306280",
+  appId: "1:503390306280:web:3ec922450ce03172432e5d"
+};
+window.onlinePlayers = {};
+window.onlineUid = null;
+let onlineDb=null, onlineRoom=null, onlinePlayerRef=null, onlinePublishAt=0, onlineListeners=[];
+const onlineReady = () => !!(window.firebase && firebaseConfig.apiKey!=="ISI_API_KEY" && firebaseConfig.projectId!=="ISI_PROJECT_ID" && firebaseConfig.databaseURL.startsWith("https://"));
+function onlineStatus(msg){const el=document.getElementById('onlineStatus');if(el)el.textContent='Status: '+msg;}
+function makeRoomCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
+async function connectOnline(create){
+ if(!onlineReady()){onlineStatus('Firebase belum dikonfigurasi. Ikuti panduan README yang disertakan.');return;}
+ try{
+  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  const auth= firebase.auth(); const cred=auth.currentUser?{user:auth.currentUser}:await auth.signInAnonymously();
+  window.onlineUid=cred.user.uid; onlineDb=firebase.database();
+  const name=(document.getElementById('onlinePlayerName').value||document.getElementById('playerName').value||'Penjelajah').trim().slice(0,24);
+  state.name=name; document.getElementById('playerName').value=name;
+  let code='';
+  if(create){code=makeRoomCode();await onlineDb.ref('rooms/'+code+'/meta').set({createdAt:firebase.database.ServerValue.TIMESTAMP,world:'jejak-sang-pahlawan',version:1});}
+  else {code=(document.getElementById('roomCodeInput').value||'').trim().toUpperCase();if(!/^[A-Z0-9]{4,8}$/.test(code)){onlineStatus('Masukkan kode ruang 4–8 karakter.');return;}const snap=await onlineDb.ref('rooms/'+code+'/meta').get();if(!snap.exists()){onlineStatus('Ruang tidak ditemukan. Periksa kode dan coba lagi.');return;}}
+  if(onlinePlayerRef)await onlinePlayerRef.onDisconnect().cancel();
+  onlineRoom=code; onlinePlayerRef=onlineDb.ref('rooms/'+code+'/players/'+window.onlineUid);
+  await onlinePlayerRef.set({uid:window.onlineUid,name:name,x:player.x,y:player.y,level:state.level,score:state.score,coins:state.coins,updatedAt:firebase.database.ServerValue.TIMESTAMP});
+  await onlinePlayerRef.onDisconnect().remove();
+  onlineDb.ref('rooms/'+code+'/players').on('value',snap=>{window.onlinePlayers=snap.val()||{};const n=Object.keys(window.onlinePlayers).length;onlineStatus('Terhubung ke ruang '+code+' • '+n+' penjelajah online.');document.getElementById('onlineRoomInfo').textContent='Kode ruang: '+code+' — bagikan kode ini kepada teman.';draw();});
+  onlineDb.ref('rooms/'+code+'/scores/'+window.onlineUid).set({name:name,score:state.score,coins:state.coins,updatedAt:firebase.database.ServerValue.TIMESTAMP});
+  notify('Berhasil masuk ruang '+code+'!');
+ }catch(err){console.error(err);onlineStatus('Gagal terhubung: '+(err.message||err)+'. Periksa konfigurasi dan Rules Firebase.');}
+}
+window.publishOnlinePosition=function(){if(!onlinePlayerRef||!window.onlineUid)return;const now=Date.now();if(now-onlinePublishAt<180)return;onlinePublishAt=now;onlinePlayerRef.update({name:state.name,x:Math.round(player.x),y:Math.round(player.y),level:state.level,score:state.score,coins:state.coins,updatedAt:firebase.database.ServerValue.TIMESTAMP}).catch(e=>onlineStatus('Gagal menyimpan posisi: '+e.message));};
+window.saveOnlineProgress=function(){if(!onlineRoom||!onlineDb||!window.onlineUid)return;const payload={name:state.name,score:state.score,coins:state.coins,correct:state.correct,completed:state.completed.map(Boolean),updatedAt:firebase.database.ServerValue.TIMESTAMP};onlineDb.ref('rooms/'+onlineRoom+'/scores/'+window.onlineUid).set(payload).catch(e=>onlineStatus('Skor belum tersimpan: '+e.message));window.publishOnlinePosition();};
+document.getElementById('createRoomBtn').addEventListener('click',()=>connectOnline(true));
+document.getElementById('joinRoomBtn').addEventListener('click',()=>connectOnline(false));
+
+try {
+  renderMap(); updateStats(); draw(); requestAnimationFrame(loop);
+} catch (err) {
+  const home = document.getElementById('home');
+  if (home) home.insertAdjacentHTML('afterbegin', '<div style="background:#fff0d4;color:#512b13;border:2px solid #d97706;border-radius:12px;padding:14px;margin-bottom:14px"><b>Game belum dapat dimulai.</b><br>Silakan tutup file dan buka kembali. Jika masalah tetap muncul, kirimkan detail berikut kepada pembuat game: <code>' + String(err && err.message || err).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) + '</code></div>');
+  console.error('Gagal memulai Jejak Sang Pahlawan:', err);
+}
+</script>
+</body>
+</html>
