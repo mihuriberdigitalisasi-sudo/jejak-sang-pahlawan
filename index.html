@@ -170,17 +170,37 @@ button:active { transform: translateY(1px); }
 
 /* Mobile play mode: fullscreen landscape when supported */
 html { min-height: 100%; }
-body.playing-fullscreen { margin: 0; overflow: hidden; }
+body.playing-fullscreen { margin: 0; overflow: auto; }
 #game:fullscreen {
+  display: block;
   width: 100vw;
+  height: 100vh;
   height: 100dvh;
   max-width: none;
+  min-height: 0;
   margin: 0;
   border-radius: 0;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
   padding: clamp(8px, 1.5vw, 18px);
   box-sizing: border-box;
   background: #fff;
+  scroll-behavior: auto;
+}
+#game:fullscreen .game-layout,
+#game:fullscreen .gamebox,
+#game:fullscreen .canvas-wrap {
+  min-height: 0;
+  max-height: none;
+}
+#game:fullscreen .game-layout {
+  align-items: start;
+}
+#game:fullscreen canvas {
+  touch-action: pan-y;
 }
 #game:fullscreen .hud { gap: 8px; }
 #game:fullscreen canvas {
@@ -585,6 +605,9 @@ try {
   startButton.addEventListener('click', function(){
     document.body.classList.add('playing-fullscreen');
     const target = gamePanel;
+    /* Mulai dari bagian paling atas; area game yang penuh layar tetap bisa digulir. */
+    target.scrollTop = 0;
+    window.scrollTo(0, 0);
     try {
       if (!document.fullscreenElement && target.requestFullscreen) {
         const request = target.requestFullscreen();
@@ -599,7 +622,12 @@ try {
     } catch (e) {}
   });
   document.addEventListener('fullscreenchange', function(){
-    if (!document.fullscreenElement) document.body.classList.remove('playing-fullscreen');
+    if (!document.fullscreenElement) {
+      document.body.classList.remove('playing-fullscreen');
+    } else if (document.fullscreenElement === gamePanel) {
+      gamePanel.scrollTop = 0;
+      window.scrollTo(0, 0);
+    }
   });
   const mapButton = document.getElementById('mapBtn');
   if (mapButton) mapButton.addEventListener('click', function(){
